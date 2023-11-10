@@ -1,5 +1,9 @@
 {
   "name": "my-app",
   "version": "1.0.0",
-  "description": "A blank app for a saas project"
+  "description": "A blank app for a saas project",
+  "devDependencies": {
+    "dotenv-cli": "^7.3.0",
+    "turbo": "^1.10.16"
+  }
 }
