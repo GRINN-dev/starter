@@ -2,7 +2,6 @@
 import { Request, Response, NextFunction, Express } from "express";
 
 const middleware = (req: Request, res: Response, next: NextFunction) => {
-  console.log("installAuthorizationHeader", req.cookies.access_token);
   const accessToken = req.cookies.access_token;
   if (accessToken) {
     req.headers.authorization = `Bearer ${accessToken}`;

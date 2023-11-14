@@ -236,7 +236,6 @@ export function getPostGraphileOptions({
           console.warn("Invalid access token", e);
         }
       }
-      console.log("tokenPayload", tokenPayload);
       const userId = uuidOrNull(
         // get the access token in the authorization header, it contains the session id
         tokenPayload?.sub
