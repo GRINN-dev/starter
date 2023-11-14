@@ -74,4 +74,4 @@ const task: Task = async (inPayload, { addJob, withPgClient }) => {
   await addJob("send_email", sendEmailPayload);
 };
 
-module.exports = task;
+export default task;
