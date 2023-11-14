@@ -15,6 +15,7 @@ import SubscriptionsPlugin from "./plugins/subscription-plugin";
 import handleErrors from "./utils/handleErrors";
 import { NodePlugin } from "graphile-build";
 import { JwtPayload, verify } from "jsonwebtoken";
+import PersistedOperationsPlugin from "@graphile/persisted-operations";
 
 export interface OurGraphQLContext {
   pgClient: PoolClient;
@@ -61,6 +62,7 @@ const isDev = process.env.NODE_ENV === "development";
 
 const pluginHook = makePluginHook([
   // Add the pub/sub realtime provider
+  ...(!isDev ? [PersistedOperationsPlugin] : []),
   PgPubsub,
 ]);
 
@@ -182,6 +184,8 @@ export function getPostGraphileOptions({
       // Adds custom orders to our GraphQL schema
       OrdersPlugin,
     ],
+
+    persistedOperationsDirectory: `../../@grinn/codegen/.persisted_operations`,
 
     /*
      * Plugins we don't want in our schema
