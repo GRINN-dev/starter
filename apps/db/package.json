@@ -1,0 +1,14 @@
+{
+  "name": "db",
+  "description": "Manage database migrations with graphile-worker",
+  "private": true,
+  "dependencies": {
+    "graphile-migrate": "^1.4.1",
+    "graphile-worker": "^0.15.1"
+  },
+  "scripts": {
+    "gm": "pnpm graphile-migrate",
+    "dev": "pnpm gm watch"
+  },
+  "version": "1.0.0"
+}
