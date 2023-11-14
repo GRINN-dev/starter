@@ -1,0 +1,17 @@
+fragment MyComment on Comment {
+  id
+  content
+  userId
+  createdAt
+  updatedAt
+  __typename
+}
+query GetAllComment {
+  comments {
+    nodes {
+      ...MyComment
+      __typename
+    }
+    __typename
+  }
+}

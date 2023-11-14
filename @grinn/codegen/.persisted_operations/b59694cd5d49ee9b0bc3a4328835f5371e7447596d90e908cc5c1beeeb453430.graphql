@@ -1,0 +1,12 @@
+mutation CreateMessageAdmin($input: CreateMessageryInput!) {
+  createMessagery(input: $input) {
+    messagery {
+      id
+      message
+      isadmin
+      reportingsId
+      __typename
+    }
+    __typename
+  }
+}

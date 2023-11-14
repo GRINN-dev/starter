@@ -1,0 +1,57 @@
+fragment MyReporting on Reporting {
+  id
+  categoryId
+  title
+  email
+  content
+  adresse
+  city
+  zipcode
+  latitude
+  longitude
+  statut
+  isOpenToPublic
+  createdAt
+  updatedAt
+  __typename
+}
+fragment MyCategory on Category {
+  id
+  title
+  content
+  couleur
+  createdAt
+  updatedAt
+  __typename
+}
+fragment MyPicture on Picture {
+  id
+  imageUrl
+  isMainPicure
+  updatedAt
+  createdAt
+  __typename
+}
+query GetReportingByUserId($id: UUID!) {
+  user(id: $id) {
+    reportings {
+      nodes {
+        ...MyReporting
+        category {
+          ...MyCategory
+          __typename
+        }
+        picturesByReportingsId {
+          nodes {
+            ...MyPicture
+            __typename
+          }
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+}

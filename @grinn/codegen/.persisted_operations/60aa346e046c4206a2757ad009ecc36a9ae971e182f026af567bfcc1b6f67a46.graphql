@@ -1,0 +1,23 @@
+query GetMessageByReporting($id: UUID!) {
+  reporting(id: $id) {
+    messageriesByReportingsId(orderBy: CREATED_AT_ASC) {
+      nodes {
+        id
+        isadmin
+        message
+        user {
+          firstname
+          __typename
+        }
+        __typename
+      }
+      __typename
+    }
+    title
+    user {
+      firstname
+      __typename
+    }
+    __typename
+  }
+}

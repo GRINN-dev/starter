@@ -1,0 +1,22 @@
+fragment MyUser on User {
+  id
+  firstname
+  lastname
+  avatarUrl
+  isAdmin
+  isVerified
+  phoneNumber
+  createdAt
+  updatedAt
+  email
+  __typename
+}
+query GetUserByReportingId($id: UUID!) {
+  reporting(id: $id) {
+    user {
+      ...MyUser
+      __typename
+    }
+    __typename
+  }
+}

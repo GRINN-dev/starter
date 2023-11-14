@@ -1,0 +1,18 @@
+fragment MyCategory on Category {
+  id
+  title
+  content
+  couleur
+  createdAt
+  updatedAt
+  __typename
+}
+mutation DeleteCategory($input: DeleteCategoryInput!) {
+  deleteCategory(input: $input) {
+    category {
+      ...MyCategory
+      __typename
+    }
+    __typename
+  }
+}

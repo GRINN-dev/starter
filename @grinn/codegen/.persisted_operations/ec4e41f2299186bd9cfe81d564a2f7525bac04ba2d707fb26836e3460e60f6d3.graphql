@@ -1,0 +1,39 @@
+fragment MyReporting on Reporting {
+  id
+  categoryId
+  title
+  email
+  content
+  adresse
+  city
+  zipcode
+  latitude
+  longitude
+  statut
+  isOpenToPublic
+  createdAt
+  updatedAt
+  __typename
+}
+fragment MyCategory on Category {
+  id
+  title
+  content
+  couleur
+  createdAt
+  updatedAt
+  __typename
+}
+query GetAllReportingsValide($first: Int, $offset: Int, $orderBy: [ReportingsOrderBy!], $filter: ReportingFilter) {
+  reportings(first: $first, offset: $offset, orderBy: $orderBy, filter: $filter, condition: {statut: VALIDE}) {
+    nodes {
+      ...MyReporting
+      category {
+        ...MyCategory
+        __typename
+      }
+      __typename
+    }
+    __typename
+  }
+}

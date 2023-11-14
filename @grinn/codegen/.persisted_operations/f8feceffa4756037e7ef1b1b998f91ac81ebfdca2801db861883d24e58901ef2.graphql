@@ -1,0 +1,11 @@
+mutation UpdateArticlePage($input: UpdatePageArticleInput!) {
+  updatePageArticle(input: $input) {
+    pageArticle {
+      content
+      createdAt
+      updatedAt
+      __typename
+    }
+    __typename
+  }
+}

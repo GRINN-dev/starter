@@ -1,0 +1,17 @@
+fragment MyPicture on Picture {
+  id
+  imageUrl
+  isMainPicure
+  updatedAt
+  createdAt
+  __typename
+}
+mutation CreatePicture($input: CreatePictureInput!) {
+  createPicture(input: $input) {
+    picture {
+      ...MyPicture
+      __typename
+    }
+    __typename
+  }
+}

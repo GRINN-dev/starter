@@ -1,0 +1,17 @@
+fragment MyComment on Comment {
+  id
+  content
+  userId
+  createdAt
+  updatedAt
+  __typename
+}
+mutation CreateComment($input: CreateCommentInput!) {
+  createComment(input: $input) {
+    comment {
+      ...MyComment
+      __typename
+    }
+    __typename
+  }
+}

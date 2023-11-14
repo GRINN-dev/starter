@@ -1,0 +1,23 @@
+fragment MyUser on User {
+  id
+  firstname
+  lastname
+  avatarUrl
+  isAdmin
+  isVerified
+  phoneNumber
+  createdAt
+  updatedAt
+  email
+  __typename
+}
+query GetAllUsers($first: Int, $offset: Int, $filter: UserFilter, $orderBy: [UsersOrderBy!]) {
+  users(first: $first, offset: $offset, filter: $filter, orderBy: $orderBy) {
+    nodes {
+      ...MyUser
+      __typename
+    }
+    totalCount
+    __typename
+  }
+}

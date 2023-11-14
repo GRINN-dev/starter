@@ -1,0 +1,18 @@
+fragment MyCategory on Category {
+  id
+  title
+  content
+  couleur
+  createdAt
+  updatedAt
+  __typename
+}
+query GetAllCategory {
+  categories {
+    nodes {
+      ...MyCategory
+      __typename
+    }
+    __typename
+  }
+}

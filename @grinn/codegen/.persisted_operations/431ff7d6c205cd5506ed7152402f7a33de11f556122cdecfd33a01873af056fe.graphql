@@ -1,0 +1,26 @@
+fragment MyReporting on Reporting {
+  id
+  categoryId
+  title
+  email
+  content
+  adresse
+  city
+  zipcode
+  latitude
+  longitude
+  statut
+  isOpenToPublic
+  createdAt
+  updatedAt
+  __typename
+}
+mutation DeleterReporting($input: DeleteReportingInput!) {
+  deleteReporting(input: $input) {
+    reporting {
+      ...MyReporting
+      __typename
+    }
+    __typename
+  }
+}

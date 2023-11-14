@@ -1,0 +1,14 @@
+fragment MyPicture on Picture {
+  id
+  imageUrl
+  isMainPicure
+  updatedAt
+  createdAt
+  __typename
+}
+query GetPictureByReportingId($id: UUID!) {
+  picture(id: $id) {
+    ...MyPicture
+    __typename
+  }
+}

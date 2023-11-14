@@ -1,0 +1,29 @@
+{
+  "dependencies": {
+    "@apollo/client": "^3.7.15",
+    "graphql-tag": "^2.12.6"
+  },
+  "devDependencies": {
+    "@graphql-codegen/add": "^3.2.3",
+    "@graphql-codegen/cli": "^2.16.5",
+    "@graphql-codegen/typescript-generic-sdk": "^3.1.0",
+    "@graphql-codegen/typescript-operations": "^2.5.13",
+    "@graphql-codegen/typescript-react-apollo": "^3.3.7",
+    "ts-node": "^10.9.1",
+    "tsup": "^6.5.0",
+    "graphql-codegen-persisted-query-ids": "^0.1.2"
+  },
+  "main": "dist/index.js",
+  "name": "@grinn/codegen",
+  "scripts": {
+    "build": "graphql-codegen --config codegen.ts && tsup src/index.ts --dts",
+    "codegen": "graphql-codegen --config codegen.ts",
+    "dev": "pnpm codegen --watch"
+  },
+  "types": "dist/index.d.ts",
+  "version": "1.0.0",
+  "files": [
+    "persisted-query-ids",
+    "./dist/**/*"
+  ]
+}

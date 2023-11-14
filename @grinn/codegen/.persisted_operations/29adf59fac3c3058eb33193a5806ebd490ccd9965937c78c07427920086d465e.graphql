@@ -1,0 +1,17 @@
+fragment MyPicture on Picture {
+  id
+  imageUrl
+  isMainPicure
+  updatedAt
+  createdAt
+  __typename
+}
+mutation DeletePicture($input: DeletePictureInput!) {
+  deletePicture(input: $input) {
+    picture {
+      ...MyPicture
+      __typename
+    }
+    __typename
+  }
+}

@@ -1,0 +1,19 @@
+fragment MyUser on User {
+  id
+  firstname
+  lastname
+  avatarUrl
+  isAdmin
+  isVerified
+  phoneNumber
+  createdAt
+  updatedAt
+  email
+  __typename
+}
+query GetUserById($id: UUID!) {
+  user(id: $id) {
+    ...MyUser
+    __typename
+  }
+}
