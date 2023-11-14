@@ -1,12 +1,10 @@
 import jwtPkg, { JwtPayload } from "jsonwebtoken";
 import { Express } from "express";
-import { login } from "../utils/login";
 import cookieParser from "cookie-parser";
+import { login } from "../utils/login";
 const { verify } = jwtPkg;
 
-export const installCookieJWT = (app: Express) => {
-  app.use(cookieParser());
-
+export const installRefreshTokenRotation = (app: Express) => {
   const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
 
   app.post("/access_token", async (req, res) => {
@@ -22,10 +20,10 @@ export const installCookieJWT = (app: Express) => {
         // user lookup - if user was deleted, they no longer get a token
         const { rows } = await rootPgPool.query(
           ` SELECT uuid as session_id, user_id AS sub FROM priv.sessions 
-            WHERE uuid = $1
+            WHERE uuid = $1 and refresh_token = $1
             LIMIT 1
           `,
-          [payload?.session_id]
+          [payload?.sid, refreshToken]
         );
 
         if (rows.length) {

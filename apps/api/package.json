@@ -29,6 +29,7 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.18.2",
+    "express-slow-down": "^2.0.0",
     "graphile-build": "^4.13.0",
     "graphile-build-pg": "^4.13.0",
     "graphile-worker": "^0.15.1",

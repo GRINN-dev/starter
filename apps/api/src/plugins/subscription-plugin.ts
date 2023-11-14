@@ -41,9 +41,7 @@ const currentUserTopicFromContext = async (
     // We have the users session ID, but to get their actual ID we need to ask the database.
     const {
       rows: [user],
-    } = await context.pgClient.query(
-      "select app_public.current_user_id() as id"
-    );
+    } = await context.pgClient.query("select publ.current_user_id() as id");
     userId = user?.id;
   }
   if (userId) {
@@ -64,7 +62,7 @@ const currentUserTopicFromContext = async (
  *
  * https://www.graphile.org/postgraphile/subscriptions/#custom-subscriptions
  *
- * And see the database trigger function `app_public.tg__graphql_subscription()`.
+ * And see the database trigger function `publ.tg__graphql_subscription()`.
  */
 const SubscriptionsPlugin = makeExtendSchemaPlugin((build) => {
   const { pgSql: sql } = build;
@@ -86,7 +84,7 @@ const SubscriptionsPlugin = makeExtendSchemaPlugin((build) => {
     `,
     resolvers: {
       UserSubscriptionPayload: {
-        user: recordByIdFromTable(build, sql.fragment`app_public.users`),
+        user: recordByIdFromTable(build, sql.fragment`publ.users`),
       },
     },
   };

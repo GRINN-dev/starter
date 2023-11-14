@@ -301,6 +301,8 @@ input LoginInput {
 }
 
 type LoginPayload {
+  accessToken: String
+  refreshToken: String
   user: User!
 }
 
@@ -803,6 +805,8 @@ input RegisterInput {
 }
 
 type RegisterPayload {
+  accessToken: String
+  refreshToken: String
   user: User!
 }
 

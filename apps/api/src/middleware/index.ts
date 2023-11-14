@@ -7,6 +7,9 @@ import installPostGraphile from "./install-postgraphile";
 import installSharedStatic from "./install-shared-static";
 import installWorkerUtils from "./install-worker-utils";
 import { installRuru } from "./install-ruru";
+import { installExpressSlowdown } from "./install-express-slow-down";
+import { installAuthorizationHeader } from "./install-authorization-header";
+import { installRefreshTokenRotation } from "./install-refresh-token-rotation";
 
 export {
   installDatabasePools,
@@ -18,4 +21,7 @@ export {
   installWorkerUtils,
   installCors,
   installRuru,
+  installExpressSlowdown,
+  installAuthorizationHeader,
+  installRefreshTokenRotation,
 };

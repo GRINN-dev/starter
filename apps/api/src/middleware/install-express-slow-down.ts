@@ -34,7 +34,7 @@ Scan auto: 13.37.27.180
     ];
 
     // don't apply rate limiter to whitelisted IPs
-    if (ipWhitelist.indexOf(ip) >= 0) {
+    if (ip && ipWhitelist.indexOf(ip) >= 0) {
       // console.log("whitelisted IP", ip);
       next();
       return;

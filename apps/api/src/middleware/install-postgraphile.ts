@@ -19,7 +19,7 @@ export default async function installPostGraphile(app: Express) {
   (httpServer as any)["__postgraphileSubscriptionsEnabled"] = true;
   const middleware = postgraphile<Request, Response>(
     authPgPool,
-    "app_public",
+    "publ",
     getPostGraphileOptions({
       websocketMiddlewares,
       rootPgPool,

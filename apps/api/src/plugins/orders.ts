@@ -1,7 +1,7 @@
 import { makeAddPgTableOrderByPlugin, orderByAscDesc } from "postgraphile";
 
 export default makeAddPgTableOrderByPlugin(
-  "app_public",
+  "publ",
   "organization_memberships",
   ({ pgSql: sql }) => {
     const sqlIdentifier = sql.identifier(Symbol("member"));
@@ -10,7 +10,7 @@ export default makeAddPgTableOrderByPlugin(
       // @ts-ignore
       ({ queryBuilder }) => sql.fragment`(
         select ${sqlIdentifier}.name
-        from app_public.users as ${sqlIdentifier}
+        from publ.users as ${sqlIdentifier}
         where ${sqlIdentifier}.id = ${queryBuilder.getTableAlias()}.user_id
         limit 1
       )`

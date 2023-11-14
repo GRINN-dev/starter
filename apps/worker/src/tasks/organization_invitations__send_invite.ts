@@ -18,7 +18,7 @@ const task: Task = async (inPayload, { addJob, withPgClient }) => {
     pgClient.query(
       `
         select *
-        from app_public.organization_invitations
+        from publ.organization_invitations
         where id = $1
       `,
       [invitationId]
@@ -35,7 +35,7 @@ const task: Task = async (inPayload, { addJob, withPgClient }) => {
       rows: [primaryEmail],
     } = await withPgClient((pgClient) =>
       pgClient.query(
-        `select * from app_public.user_emails where user_id = $1 and is_primary = true`,
+        `select * from publ.user_emails where user_id = $1 and is_primary = true`,
         [invitation.user_id]
       )
     );
@@ -51,7 +51,7 @@ const task: Task = async (inPayload, { addJob, withPgClient }) => {
   const {
     rows: [organization],
   } = await withPgClient((pgClient) =>
-    pgClient.query(`select * from app_public.organizations where id = $1`, [
+    pgClient.query(`select * from publ.organizations where id = $1`, [
       invitation.organization_id,
     ])
   );

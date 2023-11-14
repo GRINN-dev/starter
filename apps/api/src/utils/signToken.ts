@@ -14,14 +14,15 @@ export const signToken = (
     audience?: string;
     issuer?: string;
     expiresIn?: string;
-  }
+  },
+  secret: string
 ) => {
   const defaultOptions = {
     audience: "postgraphile",
     issuer: "postgraphile",
     expiresIn: "15 minutes",
   };
-  return sign(payload, process.env.ACCESS_TOKEN_SECRET!, {
+  return sign(payload, secret, {
     ...defaultOptions,
     ...pgJwtSignOptions,
   });
@@ -36,6 +37,7 @@ export const sendCookieToken = (
   const defaultOptions: CookieOptions = {
     httpOnly: true,
     path: "/access_token",
+    sameSite: "none",
     secure: true,
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
   };

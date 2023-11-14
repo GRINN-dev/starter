@@ -28,7 +28,7 @@ const task: Task = async (inPayload, { addJob, withPgClient }) => {
     pgClient.query(
       `
         select users.*
-        from app_public.users
+        from publ.users
         where id = $1
       `,
       [userId]

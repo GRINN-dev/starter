@@ -122,7 +122,7 @@ const task: Task = async (rawPayload, { addJob, withPgClient, job }) => {
     client.query<{
       id: string;
       created_at: Date;
-    }>("select * from app_public.users where id = $1", [payload.user_id])
+    }>("select * from publ.users where id = $1", [payload.user_id])
   );
 
   if (!user) {
@@ -147,7 +147,7 @@ const task: Task = async (rawPayload, { addJob, withPgClient, job }) => {
       created_at: Date;
       updated_at: Date;
     }>(
-      "select * from app_public.user_emails where user_id = $1 and is_verified is true order by id asc",
+      "select * from publ.user_emails where user_id = $1 and is_verified is true order by id asc",
       [payload.user_id]
     )
   );

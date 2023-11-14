@@ -14,11 +14,14 @@ import RemoveQueryQueryPlugin from "./plugins/remove-query-query-plugin";
 import SubscriptionsPlugin from "./plugins/subscription-plugin";
 import handleErrors from "./utils/handleErrors";
 import { NodePlugin } from "graphile-build";
+import { JwtPayload, verify } from "jsonwebtoken";
 
 export interface OurGraphQLContext {
   pgClient: PoolClient;
   sessionId: string | null;
   rootPgPool: Pool;
+  req: Request;
+  res: Response;
 }
 
 declare global {
@@ -217,10 +220,27 @@ export function getPostGraphileOptions({
       if (sessionId) {
         // Update the last_active timestamp (but only do it at most once every 15 seconds to avoid too much churn).
         await rootPgPool.query(
-          "UPDATE app_private.sessions SET last_active = NOW() WHERE uuid = $1 AND last_active < NOW() - INTERVAL '15 seconds'",
+          "UPDATE priv.sessions SET last_active = NOW() WHERE uuid = $1 AND last_active < NOW() - INTERVAL '15 seconds'",
           [sessionId]
         );
       } */
+      const access_token = req.headers?.authorization?.split(" ")[1];
+      let tokenPayload: JwtPayload | null = null;
+      if (access_token) {
+        try {
+          tokenPayload = verify(
+            access_token,
+            process.env.ACCESS_TOKEN_SECRET!
+          ) as JwtPayload;
+        } catch (e) {
+          console.warn("Invalid access token", e);
+        }
+      }
+      console.log("tokenPayload", tokenPayload);
+      const userId = uuidOrNull(
+        // get the access token in the authorization header, it contains the session id
+        tokenPayload?.sub
+      );
       return {
         // Everyone uses the "visitor" role currently
         role: process.env.DATABASE_VISITOR,
@@ -232,6 +252,7 @@ export function getPostGraphileOptions({
          * names reducing the amount of code you need to write.
          */
         // "jwt.claims.session_id": sessionId,
+        "jwt.claims.sub": userId,
       };
     },
 
@@ -241,7 +262,8 @@ export function getPostGraphileOptions({
      * access to, e.g., the logged in user.
      */
     async additionalGraphQLContextFromRequest(
-      req
+      req,
+      res
     ): Promise<Partial<OurGraphQLContext>> {
       return {
         // The current session id
@@ -249,6 +271,8 @@ export function getPostGraphileOptions({
 
         // Needed so passport can write to the database
         rootPgPool,
+        req,
+        res,
 
         // Use this to tell Passport.js we're logged in
         /*   login: (user: any) =>

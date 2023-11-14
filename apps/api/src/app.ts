@@ -6,6 +6,7 @@ import { Duplex } from "stream";
 import * as middleware from "./middleware";
 import { makeShutdownActions, ShutdownAction } from "./shutdownActions";
 import { sanitizeEnv } from "./utils";
+import cookieParser from "cookie-parser";
 
 // Server may not always be supplied, e.g. where mounting on a sub-route
 export function getHttpServer(app: Express): Server | null {
@@ -120,6 +121,11 @@ export async function makeApp({
    * express middleware. These helpers may be asynchronous, but they should
    * operate very rapidly to enable quick as possible server startup.
    */
+  app.use(cookieParser());
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+
+  middleware.installAuthorizationHeader(app);
   middleware.installCors(app);
   middleware.installRuru(app);
   middleware.installDatabasePools(app);
@@ -131,6 +137,7 @@ export async function makeApp({
   // These are our assets: images/etc; served out of the /@app/server/public folder (if present)
   middleware.installSharedStatic(app);
   middleware.installPostGraphile(app);
+  middleware.installRefreshTokenRotation(app);
 
   /*
    * Error handling middleware
