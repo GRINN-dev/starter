@@ -24,13 +24,13 @@ const config: CodegenConfig = {
       ],
       // config: { documentMode: "string" },
     },
-    "../../apps/mobile/graphql/apollo-client.tsx": {
+    /*   "../../apps/mobile/graphql/apollo-client.tsx": {
       plugins: [
         "typescript",
         "typescript-operations",
         "typescript-react-apollo",
       ],
-    },
+    }, */
     "persisted-query-ids/client.json": {
       plugins: [
         {
