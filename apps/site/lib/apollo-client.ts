@@ -22,10 +22,8 @@ const persistedLink = createPersistedQueryLink({
 });
 
 const httpLink = (input?: { cookies: any }) => {
-  const API_URL =
-    process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_ENDPOINT;
   return new HttpLink({
-    uri: API_URL + "/graphql",
+    uri: process.env.NEXT_PUBLIC_SERVER_URL + "/graphql",
     credentials: "include",
     headers: {
       cookie: input?.cookies,
@@ -39,8 +37,7 @@ export const getClient = (input?: { cookies: any }) => () => {
     cache: new InMemoryCache(),
     credentials: "include",
     link: ApolloLink.from([
-      // ...(process.env.NODE_ENV === "production" ? [persistedLink] : []),
-      persistedLink,
+      ...(process.env.NODE_ENV === "production" ? [persistedLink] : []),
       httpLink(input),
     ]),
   });

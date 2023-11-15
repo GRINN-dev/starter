@@ -1,9 +1,4 @@
-import {
-  ApolloClient,
-  MutationOptions,
-  OperationVariables,
-  QueryOptions,
-} from "@apollo/client";
+import { ApolloClient, MutationOptions, QueryOptions } from "@apollo/client";
 import { MutationFetchPolicy } from "@apollo/client/core/watchQueryOptions";
 import { getSdk, Requester } from "@grinn/codegen";
 import { DocumentNode } from "graphql";
