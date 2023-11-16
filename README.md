@@ -8,7 +8,7 @@
 - [ ] page d'acceptation d'invitation
 - [ ] page de settings
 - [ ] page de l'organisation
-- [ ] layout type dashboard (voir figma soongo)
+- [ ] layout type dashboard (voir figma soongo) @CamilleHallereau c'est pour toi ! Va sur <http://localhost:3000/fr/o/jojo> pour la voir !
 - [ ] pages d'auth: refuser si déjà connecté
 - [ ] redirection après connexion
 - [ ] workers: envoi d'email "pour de vrai"
