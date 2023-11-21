@@ -1,6 +1,6 @@
 import { ApolloClient, MutationOptions, QueryOptions } from "@apollo/client";
 import { MutationFetchPolicy } from "@apollo/client/core/watchQueryOptions";
-import { getSdk, Requester } from "@grinn/codegen";
+import { Requester, getSdk } from "@grinn/codegen";
 import { DocumentNode } from "graphql";
 
 import { ApolloRequestError } from "./apollo-error";
@@ -44,6 +44,7 @@ export function getSdkApollo<C>(client: ApolloClient<C>) {
       case "mutation": {
         const fetchPolicy = options?.fetchPolicy as MutationFetchPolicy;
 
+        // @ts-expect-error
         const response = await client.mutate<R, V>({
           mutation: doc,
           variables,
@@ -62,6 +63,7 @@ export function getSdkApollo<C>(client: ApolloClient<C>) {
         return response.data;
       }
       case "query": {
+        // @ts-expect-error
         const response = await client.query<R, V>({
           query: doc,
           variables,

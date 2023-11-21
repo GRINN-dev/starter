@@ -5,3 +5,5 @@ dist
 .env.staging
 .env.production
 apps/api-ref
+.turbo
+turbo-build.log
