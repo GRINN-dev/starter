@@ -1,8 +1,8 @@
-export default async function Page() {
+export default async function Dashboard() {
   return (
     <>
       <div className="prose container">
-        <h1>La page d'accueil apres connexion</h1>
+        <h1>DASHBOARD</h1>
         on reprend cette maquette
         https://www.figma.com/file/YzjYnNPrH6lv68HFSNHguj/BAKKAR---2023?type=design&node-id=535%3A2223&mode=dev
         <h2>objectifs</h2>
