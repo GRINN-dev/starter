@@ -1,8 +1,9 @@
+import { Header } from "@/components/Header";
+import { MainNav } from "@/components/MainNav";
 import { Metadata } from "next";
 
-
 interface LayoutProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 export const metadata: Metadata = {
   title: "SoonGo",
@@ -10,14 +11,19 @@ export const metadata: Metadata = {
 };
 
 const Layout = ({ children }: LayoutProps) => {
- 
   return (
-    
-      <div>
-        {children}
+    <div>
+      <header>
+        <Header />
+      </header>
+      <div className="flex w-full h-full  mx-auto">
+        <nav>
+          <MainNav className="h-auto" />
+        </nav>
+        <main className="flex-1 h-auto bg-gray-100">{children}</main>
       </div>
-  
-  )
-}
+    </div>
+  );
+};
 
-export default Layout
+export default Layout;

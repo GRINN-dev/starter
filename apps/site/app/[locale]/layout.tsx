@@ -1,13 +1,10 @@
+import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { notFound } from "next/navigation";
 import "../globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
-import { notFound } from "next/navigation";
-import { unstable_setRequestLocale } from "next-intl/server";
-import { Toaster } from "@/components/ui/toaster";
-import { MainNav } from "../../components/MainNav";
-import { Header } from "@/components/Header";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -31,16 +28,8 @@ export default function LocaleLayout({
   return (
     <html lang={locale}>
       <body className={inter.className}>
-        <header>
-          <Header />
-        </header>
-        <div className="flex w-full h-full  mx-auto">
-          <nav >
-            <MainNav className="h-auto" />
-          </nav>
-          <main className="flex-1 h-auto bg-gray-100">{children}</main>
-          <Toaster /> 
-        </div>
+        {children}
+        <Toaster />
       </body>
     </html>
   );
