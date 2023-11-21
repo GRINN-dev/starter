@@ -1,49 +1,56 @@
-"use client"
+"use client";
 
-import Image from 'next/image';
-import { Button } from "../../../../components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
-import { DropdownMenuShortcut } from "../../../../components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
-  
-  export function UserNav() {
-    return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-            <Avatar className="h-10 w-10">
-              <Image 
-              src="/images/avatar.png" 
+import { AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "../../../../components/ui/dropdown-menu";
+
+export function UserNav() {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="h-12 w-12 rounded-full border">
+          <Avatar className="h-10 w-10">
+            <AvatarImage
+              src="/images/avatarjojo.png"
               alt="avatar"
-              width={70}
-              height={70}
-               />
-              <AvatarFallback>SG</AvatarFallback>
-            </Avatar>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56" align="end">
-          <DropdownMenuLabel className="font-normal hidden">
-            <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">soonGo</p>
-              <p className="text-xs leading-none text-muted-foreground">
-                m@example.com
-              </p>
-            </div>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem className="hidden">
-              Profile
-              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem className="hidden">
-            Log out
-            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+              width={48}
+              height={48}
+            />
+            <AvatarFallback>SG</AvatarFallback>
+          </Avatar>
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="end">
+        <DropdownMenuLabel className="font-normal ">
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium leading-none">soonGo</p>
+            <p className="text-xs leading-none text-muted-foreground">
+              m@example.com
+            </p>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem className="">
+            Profile
+            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    )
-  }
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className="">
+          Log out
+          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}

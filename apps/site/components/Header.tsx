@@ -1,25 +1,45 @@
-"use client"
-import { SearchBar } from '@/app/[locale]/o/_components/SearchBar';
-import { UserNav } from '@/app/[locale]/o/_components/UserNav';
-import Image from 'next/image';
+"use client";
+import { UserNav } from "@/app/[locale]/o/_components/UserNav";
+import { Menu } from "lucide-react";
+import Image from "next/image";
+import { MainNav } from "./main-nav";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "./ui/sheet";
 
 export function Header() {
-    return (
-        <section className="flex flex-col border-b p-4 md:flex">
-    <div className="flex w-full h-full items-center">
-      <Image
-        src="/images/Logo_SoonGo.png"
-        alt="Logo SoonGo"
-        width={200}
-        height={100}
-      />
-      <div className="ml-6 h-auto">
-        <SearchBar />
+  return (
+    <header className="flex justify-between h-[64px] border-b py-2 px-2 bg-fuchsia-300">
+      <div className="flex items-center gap-2">
+        <Sheet>
+          <SheetTrigger className="md:hidden">
+            <Menu className="w-6 h-6" />
+          </SheetTrigger>
+          <SheetContent side="left" className="px-0 sm:px-0">
+            <SheetHeader className="px-4">
+              <SheetTitle>Menu</SheetTitle>
+              <SheetDescription>Menu</SheetDescription>
+              <MainNav locale="fr" />
+            </SheetHeader>
+          </SheetContent>
+        </Sheet>
+        <Image
+          src="/images/Logo_SoonGo.png"
+          alt="Logo SoonGo"
+          className="object-contain object-left"
+          width={200}
+          height={48}
+        />
       </div>
-      <div>
-          <UserNav />
+      <div className="flex gap-2 items-center">
+        {/* <SearchBar /> */}
+        <UserNav />
       </div>
-    </div> 
-</section>
-    )
+    </header>
+  );
 }

@@ -18,7 +18,7 @@ const O = () => {
   return (
     <div className="flex flex-col">
       <h1 className="text-3xl font-bold tracking-tight ml-6 my-6">Dashboard</h1>
-      <div className="flex mx-6 rounded-xl border bg-card text-card-foreground shadow place-content-around max-w-full">
+      <div className="flex mx-6 rounded-xl border bg-card text-card-foreground shadow place-content-around max-w-full flex-col md:flex-row flex-wrap">
         <Card className=" flex border-0 rounded-none shadow-none items-center">
           <CardHeader className="px-0 py-6">
             <CardTitle className="text-2xl font-bold pl-6">200</CardTitle>
@@ -87,18 +87,18 @@ const O = () => {
       <div className="flex items-center space-x-2">
         <CalendarDatePicker />
       </div>
-      <div className="flex max-w-full">
-        <Card className="w-1/2 m-6">
+      <div className="flex max-w-full flex-col lg:flex-row flex-wrap">
+        <Card className="m-6">
           <CardHeader>
             <CardTitle>Coûts</CardTitle>
           </CardHeader>
           <CardContent className="pl-2 m-6">
-            <div className=" flex ">
-              <div className="w-1/2 ">
+            <div className=" flex flex-wrap justify-center">
+              <div className=" ">
                 <h2 className="font-bold mb-5">Coût total des mobilités</h2>
                 <MobilityCostGraph />
               </div>
-              <div className="w-1/2">
+              <div className="">
                 <h2 className="font-bold mb-5">Répartition des coûts</h2>
                 <RepartitionCostChart />
               </div>
@@ -109,20 +109,20 @@ const O = () => {
             </div>
           </CardContent>
         </Card>
-        <Card className="w-1/2 m-6">
+        <Card className="m-6">
           <CardHeader>
             <CardTitle>Émissions de CO2</CardTitle>
             <CardDescription></CardDescription>
           </CardHeader>
           <CardContent className="pl-2 m-6">
-            <div className=" flex">
-              <div className="w-1/2">
+            <div className=" flex flex-wrap justify-center">
+              <div className="">
                 <h2 className="font-bold mb-5">
                   Émission totales des mobilités
                 </h2>
                 <MobilityEmissionGraph />
               </div>
-              <div className="w-1/2 ">
+              <div className=" ">
                 <h2 className="font-bold mb-5">Répartition des coûts</h2>
                 <RepartitionEmissionChart />
               </div>

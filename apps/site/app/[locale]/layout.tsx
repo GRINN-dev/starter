@@ -1,3 +1,4 @@
+import { TailwindIndicator } from "@/components/tailwind-indicator";
 import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -29,7 +30,7 @@ export default function LocaleLayout({
     <html lang={locale}>
       <body className={inter.className}>
         {children}
-        <Toaster />
+        <Toaster /> <TailwindIndicator />
       </body>
     </html>
   );
