@@ -1,6 +1,6 @@
 "use client";
 
-import { Cell, Legend, Pie, PieChart } from "recharts";
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from "recharts";
 
 const data = [
   { name: `Voyage d'affaire`, value: 60 },
@@ -12,7 +12,8 @@ const COLORS = ["#52525B", "#F21866", "#F795B8"];
 
 export default function RepartitionCostChart() {
   return (
-    <PieChart className="m-auto" width={300} height={300}>
+    <ResponsiveContainer className="m-auto" width={300} height={300}>
+    <PieChart>
       <Pie
         data={data}
         cx={140}
@@ -40,5 +41,6 @@ export default function RepartitionCostChart() {
         }))}
       />
     </PieChart>
+    </ResponsiveContainer>
   );
 }

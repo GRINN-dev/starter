@@ -48,7 +48,7 @@ export function MobilityEmissionGraph() {
           orientation="right"
         />
 
-        <Bar dataKey="total" barSize={40}>
+        <Bar dataKey="total" barSize={40} radius={[4, 4, 0, 0]}>
           {data.map((entry, index) => (
             <Cell key={index} fill={entry.color} />
           ))}

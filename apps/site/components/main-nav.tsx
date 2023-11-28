@@ -13,7 +13,7 @@ export function MainNav({ className, locale = "fr", ...props }: Props) {
 
   return (
     <nav
-      className={cn("flex flex-col border-4 border-pink-500 h-full", className)}
+      className={cn("flex flex-col  h-full", className)}
       {...props}
     >
       {dashboardRoutes({ locale }).map((route) => {

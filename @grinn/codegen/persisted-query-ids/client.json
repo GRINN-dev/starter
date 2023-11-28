@@ -31,5 +31,7 @@
    "UnlinkUserAuthentication": "efef5d154b91120114a5ae97193bb83daee1223c150c8bda2d6655a47482fb70",
    "UpdateOrganization": "e7fa7591569dc63a63e328a8aa8c862ddb316ea999e80bd7009500cd2d1ae2ac",
    "UpdateUser": "f3860479c8aaf60b1901dca62029b57c96953064a5a65a4ed92cf8e5173ed441",
+   "GetAllVehicles": "f037e4b5c0decb62749918e1271400bb974cf3a4dbed4c4e583d218597c0ee6e",
+   "CreateVehicle": "fe80e2491e4769e137a522da7a2ec537dd215701375ef1dd5f686ed91279cebf",
    "VerifyEmail": "37dc92ddb2ef943241e08bdfa7ee71c207fc876df739992d93ded6b9e76819d1"
 }

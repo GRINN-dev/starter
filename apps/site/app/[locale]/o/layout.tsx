@@ -13,9 +13,9 @@ export const metadata: Metadata = {
 
 const Layout = ({ children, params }: LayoutProps) => {
   return (
-    <div className="border-4 border-cyan-400 h-screen overflow-hidden">
+    <div className=" h-screen overflow-hidden">
       <Header />
-      <div className="flex w-full h-[calc(100vh-64px)] border-4 border-lime-400">
+      <div className="flex w-full h-[calc(100vh-64px)]">
         <MainNav
           className="hidden md:block h-full overflow-y-auto"
           locale={params.locale}

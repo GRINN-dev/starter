@@ -163,6 +163,39 @@ export type CreateUserEmailPayloadUserEmailEdgeArgs = {
   orderBy?: InputMaybe<Array<UserEmailsOrderBy>>;
 };
 
+/** All input for the create `Vehicle` mutation. */
+export type CreateVehicleInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  /** The `Vehicle` to be created by this mutation. */
+  vehicle: VehicleInput;
+};
+
+/** The output of our create `Vehicle` mutation. */
+export type CreateVehiclePayload = {
+  __typename?: 'CreateVehiclePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Vehicle` that was created by this mutation. */
+  vehicle?: Maybe<Vehicle>;
+  /** An edge for our `Vehicle`. May be used by Relay 1. */
+  vehicleEdge?: Maybe<VehiclesEdge>;
+};
+
+
+/** The output of our create `Vehicle` mutation. */
+export type CreateVehiclePayloadVehicleEdgeArgs = {
+  orderBy?: InputMaybe<Array<VehiclesOrderBy>>;
+};
+
 /** All input for the `deleteOrganization` mutation. */
 export type DeleteOrganizationInput = {
   /**
@@ -245,6 +278,39 @@ export type DeleteUserEmailPayload = {
 /** The output of our delete `UserEmail` mutation. */
 export type DeleteUserEmailPayloadUserEmailEdgeArgs = {
   orderBy?: InputMaybe<Array<UserEmailsOrderBy>>;
+};
+
+/** All input for the `deleteVehicle` mutation. */
+export type DeleteVehicleInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
+};
+
+/** The output of our delete `Vehicle` mutation. */
+export type DeleteVehiclePayload = {
+  __typename?: 'DeleteVehiclePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  deletedVehicleNodeId?: Maybe<Scalars['ID']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Vehicle` that was deleted by this mutation. */
+  vehicle?: Maybe<Vehicle>;
+  /** An edge for our `Vehicle`. May be used by Relay 1. */
+  vehicleEdge?: Maybe<VehiclesEdge>;
+};
+
+
+/** The output of our delete `Vehicle` mutation. */
+export type DeleteVehiclePayloadVehicleEdgeArgs = {
+  orderBy?: InputMaybe<Array<VehiclesOrderBy>>;
 };
 
 /** All input for the `forgotPassword` mutation. */
@@ -356,12 +422,16 @@ export type Mutation = {
   createOrganization?: Maybe<CreateOrganizationPayload>;
   /** Creates a single `UserEmail`. */
   createUserEmail?: Maybe<CreateUserEmailPayload>;
+  /** Creates a single `Vehicle`. */
+  createVehicle?: Maybe<CreateVehiclePayload>;
   /** Only the 'owner' may delete an organization. This operation cannot be undone, so be sure that it is what you intend. */
   deleteOrganization?: Maybe<DeleteOrganizationPayload>;
   /** Deletes a single `UserAuthentication` using a unique key. */
   deleteUserAuthentication?: Maybe<DeleteUserAuthenticationPayload>;
   /** Deletes a single `UserEmail` using a unique key. */
   deleteUserEmail?: Maybe<DeleteUserEmailPayload>;
+  /** Deletes a single `Vehicle` using a unique key. */
+  deleteVehicle?: Maybe<DeleteVehiclePayload>;
   /** If you've forgotten your password, give us one of your email addresses and we'll send you a reset token. Note this only works if you have added an email address! */
   forgotPassword?: Maybe<ForgotPasswordPayload>;
   /** You may invite a user to your organization either by their username (only for verified users) or by their email. If you opt to invite by email then an email will be sent to this person containing a code that they need to accept the invitation. If the person doesn't already have an account they will be instructed to create one; their account need not have the email address that you invited listed as the secret code is confirmation enough. */
@@ -390,6 +460,8 @@ export type Mutation = {
   updateOrganization?: Maybe<UpdateOrganizationPayload>;
   /** Updates a single `User` using a unique key and a patch. */
   updateUser?: Maybe<UpdateUserPayload>;
+  /** Updates a single `Vehicle` using a unique key and a patch. */
+  updateVehicle?: Maybe<UpdateVehiclePayload>;
   /** Once you have received a verification token for your email, you may call this mutation with that token to make your email verified. */
   verifyEmail?: Maybe<VerifyEmailPayload>;
 };
@@ -426,6 +498,12 @@ export type MutationCreateUserEmailArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateVehicleArgs = {
+  input: CreateVehicleInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteOrganizationArgs = {
   input: DeleteOrganizationInput;
 };
@@ -440,6 +518,12 @@ export type MutationDeleteUserAuthenticationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteUserEmailArgs = {
   input: DeleteUserEmailInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteVehicleArgs = {
+  input: DeleteVehicleInput;
 };
 
 
@@ -518,6 +602,12 @@ export type MutationUpdateOrganizationArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateVehicleArgs = {
+  input: UpdateVehicleInput;
 };
 
 
@@ -692,6 +782,9 @@ export type Query = {
   userAuthentication?: Maybe<UserAuthentication>;
   userByUsername?: Maybe<User>;
   userEmail?: Maybe<UserEmail>;
+  vehicle?: Maybe<Vehicle>;
+  /** Reads and enables pagination through a set of `Vehicle`. */
+  vehicles?: Maybe<VehiclesConnection>;
 };
 
 
@@ -753,6 +846,24 @@ export type QueryUserByUsernameArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryUserEmailArgs = {
   id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVehicleArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVehiclesArgs = {
+  after?: InputMaybe<Scalars['Cursor']['input']>;
+  before?: InputMaybe<Scalars['Cursor']['input']>;
+  condition?: InputMaybe<VehicleCondition>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  last?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  orderBy?: InputMaybe<Array<VehiclesOrderBy>>;
 };
 
 export type RegisterInput = {
@@ -1003,6 +1114,40 @@ export type UpdateUserPayloadUserEdgeArgs = {
   orderBy?: InputMaybe<Array<UsersOrderBy>>;
 };
 
+/** All input for the `updateVehicle` mutation. */
+export type UpdateVehicleInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['UUID']['input'];
+  /** An object where the defined keys will be set on the `Vehicle` being updated. */
+  patch: VehiclePatch;
+};
+
+/** The output of our update `Vehicle` mutation. */
+export type UpdateVehiclePayload = {
+  __typename?: 'UpdateVehiclePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']['output']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** The `Vehicle` that was updated by this mutation. */
+  vehicle?: Maybe<Vehicle>;
+  /** An edge for our `Vehicle`. May be used by Relay 1. */
+  vehicleEdge?: Maybe<VehiclesEdge>;
+};
+
+
+/** The output of our update `Vehicle` mutation. */
+export type UpdateVehiclePayloadVehicleEdgeArgs = {
+  orderBy?: InputMaybe<Array<VehiclesOrderBy>>;
+};
+
 /** A user who can log in to the application. */
 export type User = {
   __typename?: 'User';
@@ -1206,6 +1351,81 @@ export enum UsersOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
   UsernameAsc = 'USERNAME_ASC',
   UsernameDesc = 'USERNAME_DESC'
+}
+
+export type Vehicle = {
+  __typename?: 'Vehicle';
+  createdAt: Scalars['Datetime']['output'];
+  fuelConsumption?: Maybe<Scalars['Float']['output']>;
+  id: Scalars['UUID']['output'];
+  ownerName: Scalars['String']['output'];
+  price: Scalars['Int']['output'];
+  type: Scalars['String']['output'];
+  updatedAt: Scalars['Datetime']['output'];
+  year: Scalars['Int']['output'];
+};
+
+/** A condition to be used against `Vehicle` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type VehicleCondition = {
+  /** Checks for equality with the object’s `createdAt` field. */
+  createdAt?: InputMaybe<Scalars['Datetime']['input']>;
+  /** Checks for equality with the object’s `id` field. */
+  id?: InputMaybe<Scalars['UUID']['input']>;
+  /** Checks for equality with the object’s `updatedAt` field. */
+  updatedAt?: InputMaybe<Scalars['Datetime']['input']>;
+};
+
+/** An input for mutations affecting `Vehicle` */
+export type VehicleInput = {
+  fuelConsumption?: InputMaybe<Scalars['Float']['input']>;
+  ownerName: Scalars['String']['input'];
+  price: Scalars['Int']['input'];
+  type: Scalars['String']['input'];
+  year: Scalars['Int']['input'];
+};
+
+/** Represents an update to a `Vehicle`. Fields that are set will be updated. */
+export type VehiclePatch = {
+  fuelConsumption?: InputMaybe<Scalars['Float']['input']>;
+  ownerName?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['Int']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+  year?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** A connection to a list of `Vehicle` values. */
+export type VehiclesConnection = {
+  __typename?: 'VehiclesConnection';
+  /** A list of edges which contains the `Vehicle` and cursor to aid in pagination. */
+  edges: Array<VehiclesEdge>;
+  /** A list of `Vehicle` objects. */
+  nodes: Array<Vehicle>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Vehicle` you could get from the connection. */
+  totalCount: Scalars['Int']['output'];
+};
+
+/** A `Vehicle` edge in the connection. */
+export type VehiclesEdge = {
+  __typename?: 'VehiclesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']['output']>;
+  /** The `Vehicle` at the end of the edge. */
+  node: Vehicle;
+};
+
+/** Methods to use when ordering `Vehicle`. */
+export enum VehiclesOrderBy {
+  CreatedAtAsc = 'CREATED_AT_ASC',
+  CreatedAtDesc = 'CREATED_AT_DESC',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  Natural = 'NATURAL',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
+  UpdatedAtAsc = 'UPDATED_AT_ASC',
+  UpdatedAtDesc = 'UPDATED_AT_DESC'
 }
 
 /** All input for the `verifyEmail` mutation. */
@@ -1476,6 +1696,18 @@ export type UpdateUserMutationVariables = Exact<{
 
 
 export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'UpdateUserPayload', clientMutationId?: string | null, user?: { __typename?: 'User', id: any, name?: string | null, username: string } | null } | null };
+
+export type GetAllVehiclesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllVehiclesQuery = { __typename?: 'Query', vehicles?: { __typename?: 'VehiclesConnection', nodes: Array<{ __typename?: 'Vehicle', id: any, ownerName: string, price: number }> } | null };
+
+export type CreateVehicleMutationVariables = Exact<{
+  input: CreateVehicleInput;
+}>;
+
+
+export type CreateVehicleMutation = { __typename?: 'Mutation', createVehicle?: { __typename?: 'CreateVehiclePayload', vehicle?: { __typename?: 'Vehicle', id: any } | null } | null };
 
 export type VerifyEmailMutationVariables = Exact<{
   id: Scalars['UUID']['input'];
@@ -1932,6 +2164,26 @@ export const UpdateUserDocument = gql`
   }
 }
     `;
+export const GetAllVehiclesDocument = gql`
+    query GetAllVehicles {
+  vehicles {
+    nodes {
+      id
+      ownerName
+      price
+    }
+  }
+}
+    `;
+export const CreateVehicleDocument = gql`
+    mutation CreateVehicle($input: CreateVehicleInput!) {
+  createVehicle(input: $input) {
+    vehicle {
+      id
+    }
+  }
+}
+    `;
 export const VerifyEmailDocument = gql`
     mutation VerifyEmail($id: UUID!, $token: String!) {
   verifyEmail(input: {userEmailId: $id, token: $token}) {
@@ -2043,6 +2295,12 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
     },
     UpdateUser(variables: UpdateUserMutationVariables, options?: C): Promise<UpdateUserMutation> {
       return requester<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, variables, options) as Promise<UpdateUserMutation>;
+    },
+    GetAllVehicles(variables?: GetAllVehiclesQueryVariables, options?: C): Promise<GetAllVehiclesQuery> {
+      return requester<GetAllVehiclesQuery, GetAllVehiclesQueryVariables>(GetAllVehiclesDocument, variables, options) as Promise<GetAllVehiclesQuery>;
+    },
+    CreateVehicle(variables: CreateVehicleMutationVariables, options?: C): Promise<CreateVehicleMutation> {
+      return requester<CreateVehicleMutation, CreateVehicleMutationVariables>(CreateVehicleDocument, variables, options) as Promise<CreateVehicleMutation>;
     },
     VerifyEmail(variables: VerifyEmailMutationVariables, options?: C): Promise<VerifyEmailMutation> {
       return requester<VerifyEmailMutation, VerifyEmailMutationVariables>(VerifyEmailDocument, variables, options) as Promise<VerifyEmailMutation>;

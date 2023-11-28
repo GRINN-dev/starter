@@ -1,7 +1,7 @@
 "use client"
 
 import React, { PureComponent } from 'react';
-import { PieChart, Pie, Sector, Cell, Legend } from "recharts";
+import { PieChart, Pie, Sector, Cell, Legend, ResponsiveContainer } from "recharts";
 
 const data = [
   { name: `Voyage d'affaire`, value: 50 },
@@ -13,10 +13,11 @@ const COLORS = ['#52525B', '#0EA5E9', '#E0F2FE'];
 
 export default function RepartitionEmissionChart(){
     return (
-      <PieChart className="m-auto" width={300} height={300}>
+      <ResponsiveContainer className="m-auto" width={300} height={300}>
+      <PieChart>
       <Pie
         data={data}
-        cx={140}
+        cx={140} 
         cy={110}
         innerRadius={60}
         outerRadius={80}
@@ -29,11 +30,11 @@ export default function RepartitionEmissionChart(){
           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
         ))}
       </Pie>
-      <Legend className='text-xs'
-        align="center"
+      <Legend className="text-xs"
+        align="left"
         verticalAlign="bottom"
         iconType="circle"
-        iconSize={10}
+        iconSize={6}
         payload={data.map((entry, index) => ({
           value: entry.name,
           type: 'circle',
@@ -41,5 +42,6 @@ export default function RepartitionEmissionChart(){
         }))}
         />
       </PieChart>
+      </ResponsiveContainer>
     );
 }

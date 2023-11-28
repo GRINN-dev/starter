@@ -6,134 +6,123 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { MoveDown, MoveUp } from "lucide-react";
-import { CalendarDatePicker } from "./_components/CalendarDatePicker";
 import { Co2Graph } from "./_components/Co2Graph";
 import { CostGraph } from "./_components/CostGraph";
 import { MobilityCostGraph } from "./_components/MobilityCostGraph";
 import { MobilityEmissionGraph } from "./_components/MobilityEmissionGraph";
 import RepartitionCostChart from "./_components/RepartitionCostChart";
 import RepartitionEmissionChart from "./_components/RepartitionEmissionChart";
+import { CalendarDatePicker } from "./_components/CalendarDatePicker";
 
-const O = () => {
+const data = [
+  {
+      name: "200",
+      icon:<MoveDown />,
+      percent:"12%",
+      text: 'Utilisateurs',
+      isUp: false,
+    },
+  {
+    name: "150",
+    icon: <MoveDown />,
+    percent:"20.2%",
+    text: 'Véhicules',
+    isUp: false,
+  },
+  {
+    name: "60",
+    icon: <MoveDown />,
+    percent:"8%",
+    text: 'Titres Mobilités',
+    isUp: false,
+  },
+  {
+    name: "45%",
+    icon: <MoveUp />,
+    percent:"11.2%",
+    text: 'Obj. de réduction de coûts',
+    isUp: true,
+  },
+  {
+    name: "52.5%",
+    icon: <MoveUp />,
+    percent:"5.5%",
+    text: 'Obj. de réduction émissions de CO2',
+    isUp: true,
+  },
+];
+
+const Dashboard = () => {
   return (
-    <div className="flex flex-col">
-      <h1 className="text-3xl font-bold tracking-tight ml-6 my-6">Dashboard</h1>
-      <div className="flex mx-6 rounded-xl border bg-card text-card-foreground shadow place-content-around max-w-full flex-col md:flex-row flex-wrap">
-        <Card className=" flex border-0 rounded-none shadow-none items-center">
-          <CardHeader className="px-0 py-6">
-            <CardTitle className="text-2xl font-bold pl-6">200</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-row p-0">
-            <div className="text-[#F21866] text-xs px-2">
-              <MoveDown />
-              12%
-            </div>
-            <p className="text-sm text-muted-foreground">Utilisateurs</p>
-          </CardContent>
-        </Card>
-        <Card className="flex border-0 rounded-none shadow-none items-center">
-          <CardHeader className="px-0 py-6">
-            <CardTitle className="text-2xl font-bold pl-6">150</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-row p-0">
-            <div className="text-[#F21866] text-xs px-2">
-              <MoveDown />
-              20.2%
-            </div>
-            <p className="text-sm text-muted-foreground">Véhicules</p>
-          </CardContent>
-        </Card>
-        <Card className="flex border-0 rounded-none shadow-none items-center">
-          <CardHeader className="px-0 py-6">
-            <CardTitle className="text-2xl font-bold pl-6">60</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-row p-0">
-            <div className="text-[#F21866] text-xs px-2">
-              <MoveDown />
-              8%
-            </div>
-            <p className="text-xs text-muted-foreground">Titres Mobilités</p>
-          </CardContent>
-        </Card>
-        <Card className="flex border-0 rounded-none shadow-none items-center">
-          <CardHeader className="px-0 py-6">
-            <CardTitle className="text-2xl font-bold pl-6">45%</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-row p-0">
-            <div className="text-[#59D386] text-xs px-2">
-              <MoveUp />
-              11.2%
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Obj. de réduction de coûts
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="flex border-0 rounded-none shadow-none items-center">
-          <CardHeader className="px-0 py-6">
-            <CardTitle className="text-2xl font-bold pl-6">52.5%</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-row p-0">
-            <div className="text-[#59D386] text-xs px-2">
-              <MoveUp />
-              5.5%
-            </div>
-            <p className="text-sm text-muted-foreground">
-              Obj. de réduction émissions de CO2
-            </p>
-          </CardContent>
-        </Card>
+    <div className="flex flex-col w-full">
+      <h1 className="text-3xl font-bold tracking-tight ml-6 my-6 self-start">Dashboard</h1>
+      <div className=" mx-2 rounded-xl border bg-card text-card-foreground shadow max-w-full flex-col flex-wrap lg:flex lg:flex-row lg:flex-nowrap lg:place-content-around">
+      
+      {data.map((value, index) => (
+         <Card key={index} className=" grid grid-cols-5 border-0 rounded-none shadow-none items-center w-full lg:w-fit">
+         <CardHeader className="px-0 py-6 text-center">
+           <CardTitle className="text-2xl font-bold"> {value.name}</CardTitle>
+         </CardHeader>
+         <CardContent className="flex flex-row justify-center p-0 w-full">
+           <div className= {`${value.isUp ? "text-[#59D386]" : "text-[#F21866]"} text-xs` }> {value.icon} {value.percent}
+             </div>
+         </CardContent>
+         <p className="text-sm text-muted-foreground col-span-3"> {value.text}</p>
+       </Card>
+        ))}
+
       </div>
-      <div className="flex items-center space-x-2">
-        <CalendarDatePicker />
-      </div>
-      <div className="flex max-w-full flex-col lg:flex-row flex-wrap">
-        <Card className="m-6">
-          <CardHeader>
-            <CardTitle>Coûts</CardTitle>
+        <CalendarDatePicker/>
+      <div className="flex max-w-full flex-col flex-wrap xl:flex-row xl:flex-nowrap xl:place-content-around">
+        <Card className="my-4 md:px-4 mx-2" >
+          <CardHeader className="items-center text-lg">
+            <CardTitle >Coûts</CardTitle>
           </CardHeader>
-          <CardContent className="pl-2 m-6">
-            <div className=" flex flex-wrap justify-center">
-              <div className=" ">
-                <h2 className="font-bold mb-5">Coût total des mobilités</h2>
+          <CardContent className="p-2">
+            <div className=" flex flex-wrap justify-center lg:justify-between xl:flex-nowrap">
+              <div>
+                <h2 className="font-bold mb-5 text-center">Coût total des mobilités</h2>
                 <MobilityCostGraph />
               </div>
-              <div className="">
-                <h2 className="font-bold mb-5">Répartition des coûts</h2>
+              <div>
+                <h2 className="font-bold mb-5 ml-2 text-center ">Répartition des coûts</h2>
                 <RepartitionCostChart />
               </div>
             </div>
             <div>
-              <h2 className="font-bold mb-5">Évolution</h2>
+              <h2 className="font-bold my-5 text-center">Évolution</h2>
               <CostGraph />
             </div>
           </CardContent>
         </Card>
-        <Card className="m-6">
-          <CardHeader>
+        <Card className="my-4 md:px-4">
+          <CardHeader className="items-center text-lg">
             <CardTitle>Émissions de CO2</CardTitle>
             <CardDescription></CardDescription>
           </CardHeader>
-          <CardContent className="pl-2 m-6">
-            <div className=" flex flex-wrap justify-center">
-              <div className="">
-                <h2 className="font-bold mb-5">
+          <CardContent className="p-2">
+            <div className=" flex flex-wrap justify-center lg:justify-between xl:flex-nowrap">
+              <div>
+                <h2 className="font-bold mb-5 text-center">
                   Émission totales des mobilités
                 </h2>
                 <MobilityEmissionGraph />
-              </div>
-              <div className=" ">
-                <h2 className="font-bold mb-5">Répartition des coûts</h2>
+                </div>
+                <div>
+                <h2 className="font-bold mb-5 text-center">Répartition des coûts</h2>
                 <RepartitionEmissionChart />
+                </div>
               </div>
+              <div>
+                <h2 className="font-bold my-5 text-center">Évolution</h2>
+                 <Co2Graph />
             </div>
-            <h2 className="font-bold mb-5">Évolution</h2>
-            <Co2Graph />
           </CardContent>
         </Card>
-      </div>
-    </div>
+        
+        </div>
+        </div>
   );
 };
 
-export default O;
+export default Dashboard;

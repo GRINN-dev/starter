@@ -1,0 +1,17 @@
+query GetAllVehicles {
+  vehicles{
+    nodes{
+      id
+      ownerName
+      price
+    }
+  }
+}
+
+mutation CreateVehicle ($input: CreateVehicleInput!) {
+    createVehicle(input:$input){
+        vehicle{
+            id
+        }
+    }
+}
