@@ -1,3 +1,11 @@
-import { sdk } from "@/lib/apollo-browser-sdk";
+import { CreateVehicleForm } from './_components/create-vehicle-form';
 
-sdk().
+const Vehicles  =() =>{
+    return (
+      <div>
+        <CreateVehicleForm />
+      </div>
+    );
+}
+
+export default Vehicles

@@ -2,9 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 import { ChangeEvent, DragEvent, FC, useId, useState } from "react";
-
 import { cn } from "@/lib/utils";
-
 import { Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 

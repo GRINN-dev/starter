@@ -11,17 +11,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
-import RepartitionPriceChart from "./repartition-price-chart";
+import { PieChartIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Cell, Label, Legend, Pie, PieChart } from "recharts";
+import RepartitionCarChart from "./_components/repartition-car-chart";
 
-const Report = () => {
+const Fleet = () => {
   const [csvFile, setCsvFile] = useState<string[][] | null>(null);
 
+
   return (
+    
     <>
-    <h1 className="text-3xl font-bold tracking-tight ml-6 my-6 self-start">
-            Rapport
-          </h1>
+    <h1 className="text-3xl font-bold tracking-tight ml-6 my-6 text-center lg:text-start ">Rapport</h1>
       {csvFile ? (
         <>
         <Card className="my-4 mx-2">
@@ -29,45 +31,39 @@ const Report = () => {
             <CardTitle className="text-center py-2 lg:text-lg lg:my-4">Répartition des véhicules par catégorie en %</CardTitle>
           </CardHeader>
           <CardContent>
-          <RepartitionPriceChart csvData={csvFile} />
+          <RepartitionCarChart csvData={csvFile} />
           </CardContent>
           </Card>
-          <Card className=" my-6 mx-2 md:m-2">
-            <CardHeader className="p-2">
-              <CardTitle className="text-center py-2 lg:text-lg lg:my-4">Rapport Flotte</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0 max-w-full">
-              <Table className="p-0 ">
-                <TableHeader>
-                  {csvFile[0].map((cell, cellIndex) => (
-                    <TableHead className="text-xs p-2 text-center font-bold underline decoration-solid md:text-base" key={cellIndex}>
-                      {cell}
-                    </TableHead>
+        <Card className=" my-6 mx-2 md:m-2">
+        <CardHeader className="p-2">
+            <CardTitle className="text-center py-2 lg:text-lg lg:my-4">Rapport de la flotte de véhicule</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0 max-w-full">
+          <Table className="p-0 ">
+            <TableHeader>
+              {csvFile[0].map((cell, cellIndex) => (
+                <TableHead className="text-xs p-2 text-center font-bold underline decoration-solid md:text-base" key={cellIndex}>
+                  {cell.toUpperCase()}
+                </TableHead>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {csvFile.slice(1).map((row, rowIndex) => (
+                <TableRow className="font-medium" key={rowIndex}>
+                  {row.map((cell, cellIndex) => (
+                    <TableCell className="font-medium p-2 text-center md:w-[30vh] lg:w-[50vh]" key={cellIndex}>
+                      {cellIndex === 2 ? new Date(cell).toLocaleDateString(): cell}
+                    </TableCell>
                   ))}
-                </TableHeader>
-                <TableBody>
-                  {csvFile.slice(1).map((row, rowIndex) => (
-                    <TableRow className="font-medium" key={rowIndex}>
-                      {row.map((cell, cellIndex) => (
-                        <TableCell className="font-medium p-2 text-center md:w-[30vh] lg:w-[50vh]" key={cellIndex}>
-                          {cellIndex === 2
-                            ? new Date(cell).toLocaleDateString()
-                            : cellIndex === 4
-                            ? parseFloat(cell).toLocaleString("fr-FR", {
-                                style: "currency",
-                                currency: "EUR",
-                              })
-                            : cell}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          </CardContent>
           </Card>
           {/* <pre>{JSON.stringify(csvFile, null, 2)}</pre> */}
         </>
+        
       ) : null}
       <CsvDnD
         placeholder="Faire glisser un fichier"
@@ -76,9 +72,10 @@ const Report = () => {
         }}
         value={csvFile}
       />
+        
     </>
   );
 };
 
 
-export default Report;
+export default Fleet;

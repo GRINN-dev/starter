@@ -14,7 +14,8 @@ import {
 import { PieChartIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Cell, Label, Legend, Pie, PieChart } from "recharts";
-import RepartitionCarChart from "./_components/repartition-car-chart";
+import RepartitionCarChart from "./_components/repartition-price-chart";
+
 
 const Fleet = () => {
   const [csvFile, setCsvFile] = useState<string[][] | null>(null);

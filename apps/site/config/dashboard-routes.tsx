@@ -52,5 +52,11 @@ export function dashboardRoutes({ locale }: { locale: string }) {
       icon: Settings,
       href: `/${locale}/o/settings`,
     },
+
+    {
+      title: "Création véhicule",
+      icon: Settings,
+      href: `/${locale}/o/vehicles`,
+    },
   ];
 }
