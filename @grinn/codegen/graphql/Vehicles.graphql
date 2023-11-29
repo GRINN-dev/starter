@@ -4,6 +4,9 @@ query GetAllVehicles {
       id
       ownerName
       price
+      type
+      year
+      fuelConsumption
     }
   }
 }
@@ -20,12 +23,24 @@ query GetVehicle($id: UUID!) {
   vehicle(id: $id) {
     id
     ownerName
+    price
+    type
+    year
+    fuelConsumption
   }
 }
 
 mutation UpdateVehicle($input: UpdateVehicleInput!) {
   updateVehicle(input: $input) {
     vehicle {
+      id
+    }
+  }
+}
+
+mutation DeleteVehicle($input:DeleteVehicleInput!) {
+  deleteVehicle(input: $input) {
+    vehicle{
       id
     }
   }

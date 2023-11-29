@@ -31,9 +31,10 @@
    "UnlinkUserAuthentication": "efef5d154b91120114a5ae97193bb83daee1223c150c8bda2d6655a47482fb70",
    "UpdateOrganization": "e7fa7591569dc63a63e328a8aa8c862ddb316ea999e80bd7009500cd2d1ae2ac",
    "UpdateUser": "f3860479c8aaf60b1901dca62029b57c96953064a5a65a4ed92cf8e5173ed441",
-   "GetAllVehicles": "f037e4b5c0decb62749918e1271400bb974cf3a4dbed4c4e583d218597c0ee6e",
+   "GetAllVehicles": "9999f4fc3a1c6eaa8bed83f5f268127b82b8d541e43e1da5535ef898fdf01342",
    "CreateVehicle": "fe80e2491e4769e137a522da7a2ec537dd215701375ef1dd5f686ed91279cebf",
-   "GetVehicle": "c0e71895956170b27ed9965bd20c84943d8fa1c3ee2715666a61318b16fcb4ed",
+   "GetVehicle": "f3437de840e07fadc61c9ad2387a60af7789bfe1768f339170dd3199f8170a03",
    "UpdateVehicle": "d803e6ae42d6284905631b90a0f7cbf57a63c424edbc4e68bb0f423a191616b8",
+   "DeleteVehicle": "0d2400cc797ae2d017bd6558694d68a524526ad2eed4cd300d69cd884b507b5a",
    "VerifyEmail": "37dc92ddb2ef943241e08bdfa7ee71c207fc876df739992d93ded6b9e76819d1"
 }

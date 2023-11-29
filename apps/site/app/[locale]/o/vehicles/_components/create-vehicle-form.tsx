@@ -10,6 +10,8 @@ import { InputFormField } from "@/components/react-hook-form/input-form-field";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 interface CreateVehicleFormProps {
   //
@@ -65,54 +67,78 @@ export const CreateVehicleForm: FC<CreateVehicleFormProps> = () => {
 
   return (
     <div>
-      <h1>Formulaire</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div>
-            <InputFormField
-              name="ownerName"
-              label="Nom du propriétaire"
-              control={form.control}
-              type="text"
-              placeholder="Nom"
-            />
-          </div>
-          <div>
-            <InputFormField
-              name="type"
-              label="Type de véhicule"
-              control={form.control}
-              type="text"
-              placeholder="Catégorie de véhicule"
-            />
-          </div>
-          <div>
-            <InputFormField
-              name="price"
-              label="Prix"
-              control={form.control}
-              type="number"
-              placeholder="Prix en €"
-            />
-          </div>
-          <div>
-            <InputFormField
-              name="year"
-              label="Année du véhicule"
-              control={form.control}
-              type="number"
-              placeholder="Année"
-            />
-          </div>
-          <div>
-            <InputFormField
-              name="fuelConsumption"
-              label="Consommation d'essence"
-              control={form.control}
-              type="number"
-              placeholder="Consommation en L"
-            />
-          </div>
+        <FormField
+          name="ownerName"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="m-0 font-bold">Propriétaire</FormLabel>
+              <FormDescription className="text-xs m-0">Nom</FormDescription>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+          <FormField
+          name="price"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className="my-4">
+              <FormLabel className="m-0 font-bold">Prix du véhicule</FormLabel>
+              <FormDescription className="text-xs m-0">En €</FormDescription>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+          <FormField
+          name="type"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className="my-4">
+              <FormLabel className="m-0 font-bold">Type de véhicule</FormLabel>
+              <FormDescription className="text-xs m-0">Catégorie</FormDescription>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+          <FormField
+          name="year"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className="my-4">
+              <FormLabel className="m-0 font-bold">Année du véhicule</FormLabel>
+              <FormDescription className="text-xs m-0">AAAA</FormDescription>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+         <FormField
+          name="fuelConsumption"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className="my-4">
+              <FormLabel className="m-0 font-bold">Consommation essence</FormLabel>
+              <FormDescription className="text-xs m-0">Litres au cent</FormDescription>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
           <div className="mt-8 flex gap-2">
             <Button type="submit">Valider</Button>
             <Button

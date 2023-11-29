@@ -1700,7 +1700,7 @@ export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typ
 export type GetAllVehiclesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllVehiclesQuery = { __typename?: 'Query', vehicles?: { __typename?: 'VehiclesConnection', nodes: Array<{ __typename?: 'Vehicle', id: any, ownerName: string, price: number }> } | null };
+export type GetAllVehiclesQuery = { __typename?: 'Query', vehicles?: { __typename?: 'VehiclesConnection', nodes: Array<{ __typename?: 'Vehicle', id: any, ownerName: string, price: number, type: string, year: number, fuelConsumption?: number | null }> } | null };
 
 export type CreateVehicleMutationVariables = Exact<{
   input: CreateVehicleInput;
@@ -1714,7 +1714,7 @@ export type GetVehicleQueryVariables = Exact<{
 }>;
 
 
-export type GetVehicleQuery = { __typename?: 'Query', vehicle?: { __typename?: 'Vehicle', id: any, ownerName: string } | null };
+export type GetVehicleQuery = { __typename?: 'Query', vehicle?: { __typename?: 'Vehicle', id: any, ownerName: string, price: number, type: string, year: number, fuelConsumption?: number | null } | null };
 
 export type UpdateVehicleMutationVariables = Exact<{
   input: UpdateVehicleInput;
@@ -1722,6 +1722,13 @@ export type UpdateVehicleMutationVariables = Exact<{
 
 
 export type UpdateVehicleMutation = { __typename?: 'Mutation', updateVehicle?: { __typename?: 'UpdateVehiclePayload', vehicle?: { __typename?: 'Vehicle', id: any } | null } | null };
+
+export type DeleteVehicleMutationVariables = Exact<{
+  input: DeleteVehicleInput;
+}>;
+
+
+export type DeleteVehicleMutation = { __typename?: 'Mutation', deleteVehicle?: { __typename?: 'DeleteVehiclePayload', vehicle?: { __typename?: 'Vehicle', id: any } | null } | null };
 
 export type VerifyEmailMutationVariables = Exact<{
   id: Scalars['UUID']['input'];
@@ -2185,6 +2192,9 @@ export const GetAllVehiclesDocument = gql`
       id
       ownerName
       price
+      type
+      year
+      fuelConsumption
     }
   }
 }
@@ -2203,12 +2213,25 @@ export const GetVehicleDocument = gql`
   vehicle(id: $id) {
     id
     ownerName
+    price
+    type
+    year
+    fuelConsumption
   }
 }
     `;
 export const UpdateVehicleDocument = gql`
     mutation UpdateVehicle($input: UpdateVehicleInput!) {
   updateVehicle(input: $input) {
+    vehicle {
+      id
+    }
+  }
+}
+    `;
+export const DeleteVehicleDocument = gql`
+    mutation DeleteVehicle($input: DeleteVehicleInput!) {
+  deleteVehicle(input: $input) {
     vehicle {
       id
     }
@@ -2338,6 +2361,9 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
     },
     UpdateVehicle(variables: UpdateVehicleMutationVariables, options?: C): Promise<UpdateVehicleMutation> {
       return requester<UpdateVehicleMutation, UpdateVehicleMutationVariables>(UpdateVehicleDocument, variables, options) as Promise<UpdateVehicleMutation>;
+    },
+    DeleteVehicle(variables: DeleteVehicleMutationVariables, options?: C): Promise<DeleteVehicleMutation> {
+      return requester<DeleteVehicleMutation, DeleteVehicleMutationVariables>(DeleteVehicleDocument, variables, options) as Promise<DeleteVehicleMutation>;
     },
     VerifyEmail(variables: VerifyEmailMutationVariables, options?: C): Promise<VerifyEmailMutation> {
       return requester<VerifyEmailMutation, VerifyEmailMutationVariables>(VerifyEmailDocument, variables, options) as Promise<VerifyEmailMutation>;

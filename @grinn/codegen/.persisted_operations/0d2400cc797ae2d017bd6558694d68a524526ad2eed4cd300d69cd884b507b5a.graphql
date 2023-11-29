@@ -1,0 +1,9 @@
+mutation DeleteVehicle($input: DeleteVehicleInput!) {
+  deleteVehicle(input: $input) {
+    vehicle {
+      id
+      __typename
+    }
+    __typename
+  }
+}
