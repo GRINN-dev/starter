@@ -1709,6 +1709,20 @@ export type CreateVehicleMutationVariables = Exact<{
 
 export type CreateVehicleMutation = { __typename?: 'Mutation', createVehicle?: { __typename?: 'CreateVehiclePayload', vehicle?: { __typename?: 'Vehicle', id: any } | null } | null };
 
+export type GetVehicleQueryVariables = Exact<{
+  id: Scalars['UUID']['input'];
+}>;
+
+
+export type GetVehicleQuery = { __typename?: 'Query', vehicle?: { __typename?: 'Vehicle', id: any, ownerName: string } | null };
+
+export type UpdateVehicleMutationVariables = Exact<{
+  input: UpdateVehicleInput;
+}>;
+
+
+export type UpdateVehicleMutation = { __typename?: 'Mutation', updateVehicle?: { __typename?: 'UpdateVehiclePayload', vehicle?: { __typename?: 'Vehicle', id: any } | null } | null };
+
 export type VerifyEmailMutationVariables = Exact<{
   id: Scalars['UUID']['input'];
   token: Scalars['String']['input'];
@@ -2184,6 +2198,23 @@ export const CreateVehicleDocument = gql`
   }
 }
     `;
+export const GetVehicleDocument = gql`
+    query GetVehicle($id: UUID!) {
+  vehicle(id: $id) {
+    id
+    ownerName
+  }
+}
+    `;
+export const UpdateVehicleDocument = gql`
+    mutation UpdateVehicle($input: UpdateVehicleInput!) {
+  updateVehicle(input: $input) {
+    vehicle {
+      id
+    }
+  }
+}
+    `;
 export const VerifyEmailDocument = gql`
     mutation VerifyEmail($id: UUID!, $token: String!) {
   verifyEmail(input: {userEmailId: $id, token: $token}) {
@@ -2301,6 +2332,12 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
     },
     CreateVehicle(variables: CreateVehicleMutationVariables, options?: C): Promise<CreateVehicleMutation> {
       return requester<CreateVehicleMutation, CreateVehicleMutationVariables>(CreateVehicleDocument, variables, options) as Promise<CreateVehicleMutation>;
+    },
+    GetVehicle(variables: GetVehicleQueryVariables, options?: C): Promise<GetVehicleQuery> {
+      return requester<GetVehicleQuery, GetVehicleQueryVariables>(GetVehicleDocument, variables, options) as Promise<GetVehicleQuery>;
+    },
+    UpdateVehicle(variables: UpdateVehicleMutationVariables, options?: C): Promise<UpdateVehicleMutation> {
+      return requester<UpdateVehicleMutation, UpdateVehicleMutationVariables>(UpdateVehicleDocument, variables, options) as Promise<UpdateVehicleMutation>;
     },
     VerifyEmail(variables: VerifyEmailMutationVariables, options?: C): Promise<VerifyEmailMutation> {
       return requester<VerifyEmailMutation, VerifyEmailMutationVariables>(VerifyEmailDocument, variables, options) as Promise<VerifyEmailMutation>;

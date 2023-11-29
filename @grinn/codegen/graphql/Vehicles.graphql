@@ -1,6 +1,6 @@
 query GetAllVehicles {
-  vehicles{
-    nodes{
+  vehicles {
+    nodes {
       id
       ownerName
       price
@@ -8,10 +8,25 @@ query GetAllVehicles {
   }
 }
 
-mutation CreateVehicle ($input: CreateVehicleInput!) {
-    createVehicle(input:$input){
-        vehicle{
-            id
-        }
+mutation CreateVehicle($input: CreateVehicleInput!) {
+  createVehicle(input: $input) {
+    vehicle {
+      id
     }
+  }
+}
+
+query GetVehicle($id: UUID!) {
+  vehicle(id: $id) {
+    id
+    ownerName
+  }
+}
+
+mutation UpdateVehicle($input: UpdateVehicleInput!) {
+  updateVehicle(input: $input) {
+    vehicle {
+      id
+    }
+  }
 }
