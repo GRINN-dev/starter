@@ -1,0 +1,6 @@
+car_id,owner_name,year,vehicle_category,car_price,estimated_fuel_consumption
+1,John Doe,2019,Sedan,25000,30
+2,Jane Smith,2020,SUV,35000,25
+3,Bob Johnson,2018,Truck,45000,18
+4,Alice Brown,2022,Hatchback,20000,35
+5,Charlie Wilson,2017,Van,30000,22

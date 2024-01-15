@@ -54,6 +54,17 @@ erDiagram
         timestamp_with_time_zone updated_at 
     }
 
+    "publ.vehicles" {
+        uuid id PK
+        text owner_name 
+        text type 
+        integer price 
+        integer year 
+        double_precision fuel_consumption 
+        timestamp_with_time_zone created_at 
+        timestamp_with_time_zone updated_at 
+    }
+
     "publ.organization_invitations" }o--|| "publ.organizations" : "organization_id"
     "publ.organization_invitations" }o--|| "publ.users" : "user_id"
     "publ.organization_memberships" }o--|| "publ.organizations" : "organization_id"

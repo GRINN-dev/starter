@@ -1473,7 +1473,7 @@ export type ChangePasswordMutationVariables = Exact<{
 }>;
 
 
-export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword?: { __typename?: 'ChangePasswordPayload', success?: boolean | null } | null };
+export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword?: { __typename?: 'ChangePasswordPayload', success?: boolean | null, clientMutationId?: string | null } | null };
 
 export type ConfirmAccountDeletionMutationVariables = Exact<{
   token: Scalars['String']['input'];
@@ -1879,6 +1879,7 @@ export const ChangePasswordDocument = gql`
     mutation ChangePassword($oldPassword: String!, $newPassword: String!) {
   changePassword(input: {oldPassword: $oldPassword, newPassword: $newPassword}) {
     success
+    clientMutationId
   }
 }
     `;
