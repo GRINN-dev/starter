@@ -1,12 +1,12 @@
-import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { Metadata } from 'next';
-import Link from 'next/link';
-import { UserAuthForm } from './_components/login-form';
+import { cn } from "@/lib/utils";
+import { Metadata } from "next";
+import Link from "next/link";
+import { UserAuthForm } from "./_components/login-form";
+import { serverButtonVariants } from "@/components/ui/server-button-variants";
 
 export const metadata: Metadata = {
-  title: 'Authentication',
-  description: 'Authentication forms built using the components.',
+  title: "Authentication",
+  description: "Authentication forms built using the components.",
 };
 
 export default function AuthenticationPage() {
@@ -15,8 +15,8 @@ export default function AuthenticationPage() {
       <Link
         href="/inscription"
         className={cn(
-          buttonVariants({ variant: 'ghost' }),
-          'absolute right-4 top-4 md:right-8 md:top-8'
+          serverButtonVariants({ variant: "ghost" }),
+          "absolute right-4 top-4 md:right-8 md:top-8"
         )}
       >
         Inscription
@@ -41,8 +41,9 @@ export default function AuthenticationPage() {
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
             <p className="text-lg">
-              &ldquo;This library has saved me countless hours of work and helped me deliver
-              stunning designs to my clients faster than ever before.&rdquo;
+              &ldquo;This library has saved me countless hours of work and
+              helped me deliver stunning designs to my clients faster than ever
+              before.&rdquo;
             </p>
             <footer className="text-sm">Sofia Davis</footer>
           </blockquote>
@@ -51,19 +52,28 @@ export default function AuthenticationPage() {
       <div className="lg:p-8">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
           <div className="flex flex-col space-y-2 text-center">
-            <h1 className="text-2xl font-semibold tracking-tight">Me connecter à mon compte </h1>
+            <h1 className="text-2xl font-semibold tracking-tight">
+              Me connecter à mon compte{" "}
+            </h1>
             <p className="text-sm text-muted-foreground">
-              Renseigner votre email et votre mot de passe pour accéder à votre compte
+              Renseigner votre email et votre mot de passe pour accéder à votre
+              compte
             </p>
           </div>
           <UserAuthForm />
           <p className="px-8 text-center text-sm text-muted-foreground">
-            En vous connectant, vous accéptez nos{' '}
-            <Link href="/terms" className="underline underline-offset-4 hover:text-primary">
+            En vous connectant, vous accéptez nos{" "}
+            <Link
+              href="/terms"
+              className="underline underline-offset-4 hover:text-primary"
+            >
               Conditions générales d&apos;utilisation
-            </Link>{' '}
-            and{' '}
-            <Link href="/privacy" className="underline underline-offset-4 hover:text-primary">
+            </Link>{" "}
+            and{" "}
+            <Link
+              href="/privacy"
+              className="underline underline-offset-4 hover:text-primary"
+            >
               Politique de confidentialité
             </Link>
             .

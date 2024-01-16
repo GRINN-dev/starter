@@ -17,7 +17,6 @@ export function getSdkApollo<C>(client: ApolloClient<C>) {
     variables: V,
     options?: ApolloRequesterOptions<V, R>
   ): Promise<R> => {
-    console.log("options", options);
     // Valid document should contain *single* query or mutation unless it's has a fragment
     if (
       doc.definitions.filter(

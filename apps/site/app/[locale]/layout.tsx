@@ -24,7 +24,6 @@ export default function LocaleLayout({
 }) {
   // Validate that the incoming `locale` parameter is valid
   if (!locales.includes(locale as any)) notFound();
-  // unstable_setRequestLocale(locale);
 
   return (
     <html lang={locale}>
