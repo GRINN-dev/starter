@@ -1,0 +1,10 @@
+mutation TransferOrganizationBillingContact($organizationId: UUID!, $userId: UUID!) {
+  transferOrganizationBillingContact(input: {organizationId: $organizationId, userId: $userId}) {
+    organization {
+      id
+      currentUserIsBillingContact
+      __typename
+    }
+    __typename
+  }
+}

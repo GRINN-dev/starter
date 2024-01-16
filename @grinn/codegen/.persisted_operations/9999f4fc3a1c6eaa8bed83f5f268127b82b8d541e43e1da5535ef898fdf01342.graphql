@@ -1,0 +1,14 @@
+query GetAllVehicles {
+  vehicles {
+    nodes {
+      id
+      ownerName
+      price
+      type
+      year
+      fuelConsumption
+      __typename
+    }
+    __typename
+  }
+}

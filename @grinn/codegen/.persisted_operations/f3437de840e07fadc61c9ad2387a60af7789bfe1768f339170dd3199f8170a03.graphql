@@ -1,0 +1,11 @@
+query GetVehicle($id: UUID!) {
+  vehicle(id: $id) {
+    id
+    ownerName
+    price
+    type
+    year
+    fuelConsumption
+    __typename
+  }
+}
