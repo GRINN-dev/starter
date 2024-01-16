@@ -25,7 +25,7 @@
   "types": "dist/index.d.ts",
   "version": "1.0.0",
   "files": [
-    "persisted-query-ids",
-    "./dist/**/*"
+    "persisted-query-ids/client.json",
+    "persisted-query-ids/server.json"
   ]
 }

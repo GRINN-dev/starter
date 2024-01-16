@@ -12,8 +12,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
+import { GetVehicleQuery } from "@/graphql";
 import { sdk } from "@/lib/apollo-browser-sdk";
-import { GetVehicleQuery } from "@grinn/codegen";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -26,7 +27,6 @@ const formSchema = z.object({
   year: z.coerce.number().nonnegative(),
   fuelConsumption: z.coerce.number().optional(),
 });
-
 
 export function UpdateVehicleForm({
   vehicle,
@@ -58,9 +58,8 @@ export function UpdateVehicleForm({
             type: data.type,
             year: data.year,
             fuelConsumption: data?.fuelConsumption ?? 0,
-          
+          },
         },
-      },
       })
 
       .then(() => {
@@ -89,7 +88,7 @@ export function UpdateVehicleForm({
             </FormItem>
           )}
         />
-         <FormField
+        <FormField
           name="price"
           control={form.control}
           render={({ field }) => (
@@ -103,13 +102,15 @@ export function UpdateVehicleForm({
             </FormItem>
           )}
         />
-         <FormField
+        <FormField
           name="type"
           control={form.control}
           render={({ field }) => (
             <FormItem className="my-4">
               <FormLabel className="m-0 font-bold">Type de véhicule</FormLabel>
-              <FormDescription className="text-xs m-0">Catégorie</FormDescription>
+              <FormDescription className="text-xs m-0">
+                Catégorie
+              </FormDescription>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -117,7 +118,7 @@ export function UpdateVehicleForm({
             </FormItem>
           )}
         />
-         <FormField
+        <FormField
           name="year"
           control={form.control}
           render={({ field }) => (
@@ -131,13 +132,17 @@ export function UpdateVehicleForm({
             </FormItem>
           )}
         />
-         <FormField
+        <FormField
           name="fuelConsumption"
           control={form.control}
           render={({ field }) => (
             <FormItem className="my-4">
-              <FormLabel className="m-0 font-bold">Consommation essence</FormLabel>
-              <FormDescription className="text-xs m-0">Litres au cent</FormDescription>
+              <FormLabel className="m-0 font-bold">
+                Consommation essence
+              </FormLabel>
+              <FormDescription className="text-xs m-0">
+                Litres au cent
+              </FormDescription>
               <FormControl>
                 <Input {...field} />
               </FormControl>

@@ -1,6 +1,6 @@
 import { ApolloClient, MutationOptions, QueryOptions } from "@apollo/client";
 import { MutationFetchPolicy } from "@apollo/client/core/watchQueryOptions";
-import { Requester, getSdk } from "@grinn/codegen";
+import { Requester, getSdk } from "@/graphql";
 import { DocumentNode } from "graphql";
 
 import { ApolloRequestError } from "./apollo-error";
