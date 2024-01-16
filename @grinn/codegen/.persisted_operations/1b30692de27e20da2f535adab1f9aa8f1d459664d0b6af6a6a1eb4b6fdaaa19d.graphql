@@ -1,7 +1,0 @@
-mutation VerifyEmailMutation($input: VerifyEmailInput!) {
-  verifyEmail(input: $input) {
-    clientMutationId
-    boolean
-    __typename
-  }
-}

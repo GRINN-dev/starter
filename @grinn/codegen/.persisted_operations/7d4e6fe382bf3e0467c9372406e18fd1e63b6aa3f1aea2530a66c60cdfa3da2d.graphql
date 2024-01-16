@@ -1,8 +1,0 @@
-query OrganizationBySlug($slug: String!) {
-  organizationBySlug(slug: $slug) {
-    id
-    name
-    slug
-    __typename
-  }
-}

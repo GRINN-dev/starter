@@ -1,6 +1,6 @@
 // addToPersistedOperations.js
-const map = require("./persisted-query-ids/server.json");
-const { promises: fsp } = require("fs");
+const map = require('./persisted-query-ids/server.json');
+const { promises: fsp } = require('fs');
 
 async function main() {
   await Promise.all(
@@ -10,7 +10,7 @@ async function main() {
   );
 }
 
-main().catch(e => {
+main().catch((e) => {
   console.error(e);
   process.exit(1);
 });

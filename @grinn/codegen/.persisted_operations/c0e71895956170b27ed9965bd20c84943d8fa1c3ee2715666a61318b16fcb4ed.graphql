@@ -1,7 +1,0 @@
-query GetVehicle($id: UUID!) {
-  vehicle(id: $id) {
-    id
-    ownerName
-    __typename
-  }
-}

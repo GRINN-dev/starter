@@ -1,9 +1,0 @@
-query GetArticlePageById($id: UUID!) {
-  pageArticle(id: $id) {
-    id
-    content
-    createdAt
-    updatedAt
-    __typename
-  }
-}

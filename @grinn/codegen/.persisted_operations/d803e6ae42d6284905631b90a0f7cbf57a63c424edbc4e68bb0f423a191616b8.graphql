@@ -1,9 +1,0 @@
-mutation UpdateVehicle($input: UpdateVehicleInput!) {
-  updateVehicle(input: $input) {
-    vehicle {
-      id
-      __typename
-    }
-    __typename
-  }
-}

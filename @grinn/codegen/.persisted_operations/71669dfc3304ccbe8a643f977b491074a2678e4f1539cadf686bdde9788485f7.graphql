@@ -1,6 +1,0 @@
-mutation LogOut {
-  logout {
-    success
-    __typename
-  }
-}

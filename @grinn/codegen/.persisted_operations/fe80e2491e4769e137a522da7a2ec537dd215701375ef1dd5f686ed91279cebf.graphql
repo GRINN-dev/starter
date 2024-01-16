@@ -1,9 +1,0 @@
-mutation CreateVehicle($input: CreateVehicleInput!) {
-  createVehicle(input: $input) {
-    vehicle {
-      id
-      __typename
-    }
-    __typename
-  }
-}

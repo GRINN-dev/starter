@@ -1,6 +1,0 @@
-mutation RequestAccountDeletion {
-  requestAccountDeletion(input: {}) {
-    success
-    __typename
-  }
-}
