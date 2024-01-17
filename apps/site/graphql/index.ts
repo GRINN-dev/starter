@@ -342,9 +342,8 @@ export type InviteToOrganizationInput = {
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: InputMaybe<Scalars['String']['input']>;
-  email?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
   organizationId: Scalars['UUID']['input'];
-  username?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** The output of our `inviteToOrganization` mutation. */
@@ -360,8 +359,8 @@ export type InviteToOrganizationPayload = {
 };
 
 export type LoginInput = {
+  email: Scalars['String']['input'];
   password: Scalars['String']['input'];
-  username: Scalars['String']['input'];
 };
 
 export type LoginPayload = {
@@ -434,7 +433,7 @@ export type Mutation = {
   deleteVehicle?: Maybe<DeleteVehiclePayload>;
   /** If you've forgotten your password, give us one of your email addresses and we'll send you a reset token. Note this only works if you have added an email address! */
   forgotPassword?: Maybe<ForgotPasswordPayload>;
-  /** You may invite a user to your organization either by their username (only for verified users) or by their email. If you opt to invite by email then an email will be sent to this person containing a code that they need to accept the invitation. If the person doesn't already have an account they will be instructed to create one; their account need not have the email address that you invited listed as the secret code is confirmation enough. */
+  /** You may invite a user to your organization either by their email. If you opt to invite by email then an email will be sent to this person containing a code that they need to accept the invitation. If the person doesn't already have an account they will be instructed to create one; their account need not have the email address that you invited listed as the secret code is confirmation enough. */
   inviteToOrganization?: Maybe<InviteToOrganizationPayload>;
   /** Use this mutation to log in to your account; this login uses sessions so you do not need to take further action. */
   login?: Maybe<LoginPayload>;
@@ -780,7 +779,6 @@ export type Query = {
   organizations?: Maybe<OrganizationsConnection>;
   user?: Maybe<User>;
   userAuthentication?: Maybe<UserAuthentication>;
-  userByUsername?: Maybe<User>;
   userEmail?: Maybe<UserEmail>;
   vehicle?: Maybe<Vehicle>;
   /** Reads and enables pagination through a set of `Vehicle`. */
@@ -838,12 +836,6 @@ export type QueryUserAuthenticationArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryUserByUsernameArgs = {
-  username: Scalars['String']['input'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryUserEmailArgs = {
   id: Scalars['UUID']['input'];
 };
@@ -869,16 +861,14 @@ export type QueryVehiclesArgs = {
 export type RegisterInput = {
   avatarUrl?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
-  name?: InputMaybe<Scalars['String']['input']>;
+  firstname?: InputMaybe<Scalars['String']['input']>;
+  lastname?: InputMaybe<Scalars['String']['input']>;
   password: Scalars['String']['input'];
-  username: Scalars['String']['input'];
 };
 
 export type RegisterPayload = {
   __typename?: 'RegisterPayload';
-  accessToken?: Maybe<Scalars['String']['output']>;
-  refreshToken?: Maybe<Scalars['String']['output']>;
-  user: User;
+  success?: Maybe<Scalars['Boolean']['output']>;
 };
 
 /** All input for the `removeFromOrganization` mutation. */
@@ -1154,14 +1144,16 @@ export type User = {
   /** Optional avatar URL. */
   avatarUrl?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['Datetime']['output'];
+  /** Public-facing first name (or pseudonym) of the user. */
+  firstname?: Maybe<Scalars['String']['output']>;
   hasPassword?: Maybe<Scalars['Boolean']['output']>;
   /** Unique identifier for the user. */
   id: Scalars['UUID']['output'];
   /** If true, the user has elevated privileges. */
   isAdmin: Scalars['Boolean']['output'];
   isVerified: Scalars['Boolean']['output'];
-  /** Public-facing name (or pseudonym) of the user. */
-  name?: Maybe<Scalars['String']['output']>;
+  /** Public-facing last name (or pseudonym) of the user. */
+  lastname?: Maybe<Scalars['String']['output']>;
   /** Reads and enables pagination through a set of `OrganizationMembership`. */
   organizationMemberships: OrganizationMembershipsConnection;
   updatedAt: Scalars['Datetime']['output'];
@@ -1169,8 +1161,6 @@ export type User = {
   userAuthenticationsList: Array<UserAuthentication>;
   /** Reads and enables pagination through a set of `UserEmail`. */
   userEmails: UserEmailsConnection;
-  /** Public-facing username (or 'handle') of the user. */
-  username: Scalars['String']['output'];
 };
 
 
@@ -1321,10 +1311,10 @@ export enum UserEmailsOrderBy {
 export type UserPatch = {
   /** Optional avatar URL. */
   avatarUrl?: InputMaybe<Scalars['String']['input']>;
-  /** Public-facing name (or pseudonym) of the user. */
-  name?: InputMaybe<Scalars['String']['input']>;
-  /** Public-facing username (or 'handle') of the user. */
-  username?: InputMaybe<Scalars['String']['input']>;
+  /** Public-facing first name (or pseudonym) of the user. */
+  firstname?: InputMaybe<Scalars['String']['input']>;
+  /** Public-facing last name (or pseudonym) of the user. */
+  lastname?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UserSubscriptionPayload = {
@@ -1348,9 +1338,7 @@ export enum UsersOrderBy {
   IdDesc = 'ID_DESC',
   Natural = 'NATURAL',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC',
-  UsernameAsc = 'USERNAME_ASC',
-  UsernameDesc = 'USERNAME_DESC'
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
 export type Vehicle = {
@@ -1500,7 +1488,7 @@ export type CurrentUserAuthenticationsQuery = { __typename?: 'Query', currentUse
 export type CurrentUserUpdatedSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CurrentUserUpdatedSubscription = { __typename?: 'Subscription', currentUserUpdated?: { __typename?: 'UserSubscriptionPayload', event?: string | null, user?: { __typename?: 'User', id: any, username: string, name?: string | null, avatarUrl?: string | null, isAdmin: boolean, isVerified: boolean } | null } | null };
+export type CurrentUserUpdatedSubscription = { __typename?: 'Subscription', currentUserUpdated?: { __typename?: 'UserSubscriptionPayload', event?: string | null, user?: { __typename?: 'User', id: any, firstname?: string | null, lastname?: string | null, avatarUrl?: string | null, isAdmin: boolean, isVerified: boolean } | null } | null };
 
 export type DeleteEmailMutationVariables = Exact<{
   emailId: Scalars['UUID']['input'];
@@ -1533,24 +1521,23 @@ export type InvitationDetailQueryVariables = Exact<{
 }>;
 
 
-export type InvitationDetailQuery = { __typename?: 'Query', organizationForInvitation?: { __typename?: 'Organization', id: any, name: string, slug: string } | null, currentUser?: { __typename?: 'User', id: any, name?: string | null, username: string, avatarUrl?: string | null, isAdmin: boolean, isVerified: boolean, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', nodes: Array<{ __typename?: 'OrganizationMembership', id: any, isOwner: boolean, isBillingContact: boolean, organization?: { __typename?: 'Organization', id: any, name: string, slug: string } | null }> } } | null };
+export type InvitationDetailQuery = { __typename?: 'Query', organizationForInvitation?: { __typename?: 'Organization', id: any, name: string, slug: string } | null, currentUser?: { __typename?: 'User', id: any, firstname?: string | null, lastname?: string | null, avatarUrl?: string | null, isAdmin: boolean, isVerified: boolean, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', nodes: Array<{ __typename?: 'OrganizationMembership', id: any, isOwner: boolean, isBillingContact: boolean, organization?: { __typename?: 'Organization', id: any, name: string, slug: string } | null }> } } | null };
 
 export type InviteToOrganizationMutationVariables = Exact<{
   organizationId: Scalars['UUID']['input'];
-  email?: InputMaybe<Scalars['String']['input']>;
-  username?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
 }>;
 
 
 export type InviteToOrganizationMutation = { __typename?: 'Mutation', inviteToOrganization?: { __typename?: 'InviteToOrganizationPayload', clientMutationId?: string | null } | null };
 
 export type LoginMutationVariables = Exact<{
-  username: Scalars['String']['input'];
+  email: Scalars['String']['input'];
   password: Scalars['String']['input'];
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login?: { __typename?: 'LoginPayload', user: { __typename?: 'User', id: any, username: string, name?: string | null } } | null };
+export type LoginMutation = { __typename?: 'Mutation', login?: { __typename?: 'LoginPayload', user: { __typename?: 'User', id: any, firstname?: string | null, lastname?: string | null } } | null };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -1571,9 +1558,9 @@ export type OrganizationBySlugQueryVariables = Exact<{
 
 export type OrganizationBySlugQuery = { __typename?: 'Query', organizationBySlug?: { __typename?: 'Organization', id: any, name: string, slug: string } | null };
 
-export type OrganizationMembers_MembershipFragment = { __typename?: 'OrganizationMembership', id: any, createdAt: any, isOwner: boolean, isBillingContact: boolean, user?: { __typename?: 'User', id: any, username: string, name?: string | null } | null };
+export type OrganizationMembers_MembershipFragment = { __typename?: 'OrganizationMembership', id: any, createdAt: any, isOwner: boolean, isBillingContact: boolean, user?: { __typename?: 'User', id: any, firstname?: string | null, lastname?: string | null } | null };
 
-export type OrganizationMembers_OrganizationFragment = { __typename?: 'Organization', id: any, name: string, slug: string, currentUserIsOwner?: boolean | null, currentUserIsBillingContact?: boolean | null, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', totalCount: number, nodes: Array<{ __typename?: 'OrganizationMembership', id: any, createdAt: any, isOwner: boolean, isBillingContact: boolean, user?: { __typename?: 'User', id: any, username: string, name?: string | null } | null }> } };
+export type OrganizationMembers_OrganizationFragment = { __typename?: 'Organization', id: any, name: string, slug: string, currentUserIsOwner?: boolean | null, currentUserIsBillingContact?: boolean | null, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', totalCount: number, nodes: Array<{ __typename?: 'OrganizationMembership', id: any, createdAt: any, isOwner: boolean, isBillingContact: boolean, user?: { __typename?: 'User', id: any, firstname?: string | null, lastname?: string | null } | null }> } };
 
 export type OrganizationMembersQueryVariables = Exact<{
   slug: Scalars['String']['input'];
@@ -1581,30 +1568,30 @@ export type OrganizationMembersQueryVariables = Exact<{
 }>;
 
 
-export type OrganizationMembersQuery = { __typename?: 'Query', organizationBySlug?: { __typename?: 'Organization', id: any, name: string, slug: string, currentUserIsOwner?: boolean | null, currentUserIsBillingContact?: boolean | null, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', totalCount: number, nodes: Array<{ __typename?: 'OrganizationMembership', id: any, createdAt: any, isOwner: boolean, isBillingContact: boolean, user?: { __typename?: 'User', id: any, username: string, name?: string | null } | null }> } } | null, currentUser?: { __typename?: 'User', id: any, name?: string | null, username: string, avatarUrl?: string | null, isAdmin: boolean, isVerified: boolean, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', nodes: Array<{ __typename?: 'OrganizationMembership', id: any, isOwner: boolean, isBillingContact: boolean, organization?: { __typename?: 'Organization', id: any, name: string, slug: string } | null }> } } | null };
+export type OrganizationMembersQuery = { __typename?: 'Query', organizationBySlug?: { __typename?: 'Organization', id: any, name: string, slug: string, currentUserIsOwner?: boolean | null, currentUserIsBillingContact?: boolean | null, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', totalCount: number, nodes: Array<{ __typename?: 'OrganizationMembership', id: any, createdAt: any, isOwner: boolean, isBillingContact: boolean, user?: { __typename?: 'User', id: any, firstname?: string | null, lastname?: string | null } | null }> } } | null, currentUser?: { __typename?: 'User', id: any, firstname?: string | null, lastname?: string | null, avatarUrl?: string | null, isAdmin: boolean, isVerified: boolean, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', nodes: Array<{ __typename?: 'OrganizationMembership', id: any, isOwner: boolean, isBillingContact: boolean, organization?: { __typename?: 'Organization', id: any, name: string, slug: string } | null }> } } | null };
 
 export type OrganizationPageQueryVariables = Exact<{
   slug: Scalars['String']['input'];
 }>;
 
 
-export type OrganizationPageQuery = { __typename?: 'Query', organizationBySlug?: { __typename?: 'Organization', id: any, name: string, slug: string, currentUserIsOwner?: boolean | null, currentUserIsBillingContact?: boolean | null } | null, currentUser?: { __typename?: 'User', id: any, name?: string | null, username: string, avatarUrl?: string | null, isAdmin: boolean, isVerified: boolean, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', nodes: Array<{ __typename?: 'OrganizationMembership', id: any, isOwner: boolean, isBillingContact: boolean, organization?: { __typename?: 'Organization', id: any, name: string, slug: string } | null }> } } | null };
+export type OrganizationPageQuery = { __typename?: 'Query', organizationBySlug?: { __typename?: 'Organization', id: any, name: string, slug: string, currentUserIsOwner?: boolean | null, currentUserIsBillingContact?: boolean | null } | null, currentUser?: { __typename?: 'User', id: any, firstname?: string | null, lastname?: string | null, avatarUrl?: string | null, isAdmin: boolean, isVerified: boolean, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', nodes: Array<{ __typename?: 'OrganizationMembership', id: any, isOwner: boolean, isBillingContact: boolean, organization?: { __typename?: 'Organization', id: any, name: string, slug: string } | null }> } } | null };
 
 export type OrganizationPage_OrganizationFragment = { __typename?: 'Organization', id: any, name: string, slug: string, currentUserIsOwner?: boolean | null, currentUserIsBillingContact?: boolean | null };
 
-export type OrganizationPage_QueryFragment = { __typename?: 'Query', organizationBySlug?: { __typename?: 'Organization', id: any, name: string, slug: string, currentUserIsOwner?: boolean | null, currentUserIsBillingContact?: boolean | null } | null, currentUser?: { __typename?: 'User', id: any, name?: string | null, username: string, avatarUrl?: string | null, isAdmin: boolean, isVerified: boolean, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', nodes: Array<{ __typename?: 'OrganizationMembership', id: any, isOwner: boolean, isBillingContact: boolean, organization?: { __typename?: 'Organization', id: any, name: string, slug: string } | null }> } } | null };
+export type OrganizationPage_QueryFragment = { __typename?: 'Query', organizationBySlug?: { __typename?: 'Organization', id: any, name: string, slug: string, currentUserIsOwner?: boolean | null, currentUserIsBillingContact?: boolean | null } | null, currentUser?: { __typename?: 'User', id: any, firstname?: string | null, lastname?: string | null, avatarUrl?: string | null, isAdmin: boolean, isVerified: boolean, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', nodes: Array<{ __typename?: 'OrganizationMembership', id: any, isOwner: boolean, isBillingContact: boolean, organization?: { __typename?: 'Organization', id: any, name: string, slug: string } | null }> } } | null };
 
-export type ProfileSettingsForm_UserFragment = { __typename?: 'User', id: any, name?: string | null, username: string, avatarUrl?: string | null };
+export type ProfileSettingsForm_UserFragment = { __typename?: 'User', id: any, firstname?: string | null, lastname?: string | null, avatarUrl?: string | null };
 
 export type RegisterMutationVariables = Exact<{
-  username: Scalars['String']['input'];
   password: Scalars['String']['input'];
   email: Scalars['String']['input'];
-  name?: InputMaybe<Scalars['String']['input']>;
+  firstName: Scalars['String']['input'];
+  lastName: Scalars['String']['input'];
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register?: { __typename?: 'RegisterPayload', user: { __typename?: 'User', id: any, username: string, name?: string | null } } | null };
+export type RegisterMutation = { __typename?: 'Mutation', register?: { __typename?: 'RegisterPayload', success?: boolean | null } | null };
 
 export type RemoveFromOrganizationMutationVariables = Exact<{
   organizationId: Scalars['UUID']['input'];
@@ -1638,7 +1625,7 @@ export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword?: {
 export type SettingsEmailsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SettingsEmailsQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', id: any, isVerified: boolean, name?: string | null, username: string, avatarUrl?: string | null, isAdmin: boolean, userEmails: { __typename?: 'UserEmailsConnection', nodes: Array<{ __typename?: 'UserEmail', id: any, email: string, isVerified: boolean, isPrimary: boolean, createdAt: any }> }, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', nodes: Array<{ __typename?: 'OrganizationMembership', id: any, isOwner: boolean, isBillingContact: boolean, organization?: { __typename?: 'Organization', id: any, name: string, slug: string } | null }> } } | null };
+export type SettingsEmailsQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', id: any, isVerified: boolean, firstname?: string | null, lastname?: string | null, avatarUrl?: string | null, isAdmin: boolean, userEmails: { __typename?: 'UserEmailsConnection', nodes: Array<{ __typename?: 'UserEmail', id: any, email: string, isVerified: boolean, isPrimary: boolean, createdAt: any }> }, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', nodes: Array<{ __typename?: 'OrganizationMembership', id: any, isOwner: boolean, isBillingContact: boolean, organization?: { __typename?: 'Organization', id: any, name: string, slug: string } | null }> } } | null };
 
 export type SettingsPasswordQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1648,16 +1635,16 @@ export type SettingsPasswordQuery = { __typename?: 'Query', currentUser?: { __ty
 export type SettingsProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SettingsProfileQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', id: any, name?: string | null, username: string, avatarUrl?: string | null, isAdmin: boolean, isVerified: boolean, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', nodes: Array<{ __typename?: 'OrganizationMembership', id: any, isOwner: boolean, isBillingContact: boolean, organization?: { __typename?: 'Organization', id: any, name: string, slug: string } | null }> } } | null };
+export type SettingsProfileQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', id: any, firstname?: string | null, lastname?: string | null, avatarUrl?: string | null, isAdmin: boolean, isVerified: boolean, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', nodes: Array<{ __typename?: 'OrganizationMembership', id: any, isOwner: boolean, isBillingContact: boolean, organization?: { __typename?: 'Organization', id: any, name: string, slug: string } | null }> } } | null };
 
 export type SharedQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SharedQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', id: any, name?: string | null, username: string, avatarUrl?: string | null, isAdmin: boolean, isVerified: boolean, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', nodes: Array<{ __typename?: 'OrganizationMembership', id: any, isOwner: boolean, isBillingContact: boolean, organization?: { __typename?: 'Organization', id: any, name: string, slug: string } | null }> } } | null };
+export type SharedQuery = { __typename?: 'Query', currentUser?: { __typename?: 'User', id: any, firstname?: string | null, lastname?: string | null, avatarUrl?: string | null, isAdmin: boolean, isVerified: boolean, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', nodes: Array<{ __typename?: 'OrganizationMembership', id: any, isOwner: boolean, isBillingContact: boolean, organization?: { __typename?: 'Organization', id: any, name: string, slug: string } | null }> } } | null };
 
-export type SharedLayout_QueryFragment = { __typename?: 'Query', currentUser?: { __typename?: 'User', id: any, name?: string | null, username: string, avatarUrl?: string | null, isAdmin: boolean, isVerified: boolean, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', nodes: Array<{ __typename?: 'OrganizationMembership', id: any, isOwner: boolean, isBillingContact: boolean, organization?: { __typename?: 'Organization', id: any, name: string, slug: string } | null }> } } | null };
+export type SharedLayout_QueryFragment = { __typename?: 'Query', currentUser?: { __typename?: 'User', id: any, firstname?: string | null, lastname?: string | null, avatarUrl?: string | null, isAdmin: boolean, isVerified: boolean, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', nodes: Array<{ __typename?: 'OrganizationMembership', id: any, isOwner: boolean, isBillingContact: boolean, organization?: { __typename?: 'Organization', id: any, name: string, slug: string } | null }> } } | null };
 
-export type SharedLayout_UserFragment = { __typename?: 'User', id: any, name?: string | null, username: string, avatarUrl?: string | null, isAdmin: boolean, isVerified: boolean, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', nodes: Array<{ __typename?: 'OrganizationMembership', id: any, isOwner: boolean, isBillingContact: boolean, organization?: { __typename?: 'Organization', id: any, name: string, slug: string } | null }> } };
+export type SharedLayout_UserFragment = { __typename?: 'User', id: any, firstname?: string | null, lastname?: string | null, avatarUrl?: string | null, isAdmin: boolean, isVerified: boolean, organizationMemberships: { __typename?: 'OrganizationMembershipsConnection', nodes: Array<{ __typename?: 'OrganizationMembership', id: any, isOwner: boolean, isBillingContact: boolean, organization?: { __typename?: 'Organization', id: any, name: string, slug: string } | null }> } };
 
 export type TransferOrganizationBillingContactMutationVariables = Exact<{
   organizationId: Scalars['UUID']['input'];
@@ -1695,7 +1682,7 @@ export type UpdateUserMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'UpdateUserPayload', clientMutationId?: string | null, user?: { __typename?: 'User', id: any, name?: string | null, username: string } | null } | null };
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'UpdateUserPayload', clientMutationId?: string | null, user?: { __typename?: 'User', id: any, firstname?: string | null, lastname?: string | null } | null } | null };
 
 export type GetAllVehiclesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1784,8 +1771,8 @@ export const OrganizationMembers_MembershipFragmentDoc = gql`
   isBillingContact
   user {
     id
-    username
-    name
+    firstname
+    lastname
   }
 }
     `;
@@ -1808,8 +1795,8 @@ ${OrganizationMembers_MembershipFragmentDoc}`;
 export const SharedLayout_UserFragmentDoc = gql`
     fragment SharedLayout_User on User {
   id
-  name
-  username
+  firstname
+  lastname
   avatarUrl
   isAdmin
   isVerified
@@ -1848,8 +1835,8 @@ ${OrganizationPage_OrganizationFragmentDoc}`;
 export const ProfileSettingsForm_UserFragmentDoc = gql`
     fragment ProfileSettingsForm_User on User {
   id
-  name
-  username
+  firstname
+  lastname
   avatarUrl
 }
     `;
@@ -1925,8 +1912,8 @@ export const CurrentUserUpdatedDocument = gql`
     event
     user {
       id
-      username
-      name
+      firstname
+      lastname
       avatarUrl
       isAdmin
       isVerified
@@ -1974,21 +1961,19 @@ export const InvitationDetailDocument = gql`
 }
     ${SharedLayout_QueryFragmentDoc}`;
 export const InviteToOrganizationDocument = gql`
-    mutation InviteToOrganization($organizationId: UUID!, $email: String, $username: String) {
-  inviteToOrganization(
-    input: {organizationId: $organizationId, email: $email, username: $username}
-  ) {
+    mutation InviteToOrganization($organizationId: UUID!, $email: String!) {
+  inviteToOrganization(input: {organizationId: $organizationId, email: $email}) {
     clientMutationId
   }
 }
     `;
 export const LoginDocument = gql`
-    mutation Login($username: String!, $password: String!) {
-  login(input: {username: $username, password: $password}) {
+    mutation Login($email: String!, $password: String!) {
+  login(input: {email: $email, password: $password}) {
     user {
       id
-      username
-      name
+      firstname
+      lastname
     }
   }
 }
@@ -2040,15 +2025,11 @@ export const OrganizationPageDocument = gql`
 }
     ${OrganizationPage_QueryFragmentDoc}`;
 export const RegisterDocument = gql`
-    mutation Register($username: String!, $password: String!, $email: String!, $name: String) {
+    mutation Register($password: String!, $email: String!, $firstName: String!, $lastName: String!) {
   register(
-    input: {username: $username, password: $password, email: $email, name: $name}
+    input: {password: $password, email: $email, firstname: $firstName, lastname: $lastName}
   ) {
-    user {
-      id
-      username
-      name
-    }
+    success
   }
 }
     `;
@@ -2180,8 +2161,8 @@ export const UpdateUserDocument = gql`
     clientMutationId
     user {
       id
-      name
-      username
+      firstname
+      lastname
     }
   }
 }

@@ -2,9 +2,10 @@ fragment SharedLayout_Query on Query {
   currentUser {
     id
     ...SharedLayout_User
+    __typename
   }
+  __typename
 }
-
 fragment SharedLayout_User on User {
   id
   firstname
@@ -21,7 +22,20 @@ fragment SharedLayout_User on User {
         id
         name
         slug
+        __typename
       }
+      __typename
     }
+    __typename
+  }
+  __typename
+}
+query InvitationDetail($id: UUID!, $code: String) {
+  ...SharedLayout_Query
+  organizationForInvitation(invitationId: $id, code: $code) {
+    id
+    name
+    slug
+    __typename
   }
 }

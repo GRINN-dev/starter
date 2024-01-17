@@ -5,8 +5,8 @@ fragment OrganizationMembers_Membership on OrganizationMembership {
   isBillingContact
   user {
     id
-    username
-    name
+    firstname
+    lastname
   }
 }
 

@@ -1,7 +1,6 @@
 mutation InviteToOrganization($organizationId: UUID!, $email: String!) {
-  inviteToOrganization(
-    input: { organizationId: $organizationId, email: $email }
-  ) {
+  inviteToOrganization(input: {organizationId: $organizationId, email: $email}) {
     clientMutationId
+    __typename
   }
 }
