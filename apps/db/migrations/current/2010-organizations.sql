@@ -1,6 +1,5 @@
 /*
- * Organizations have a name, and a unique identifier we call the "slug" (it's
- * like a user's username). Both of these are updatable.
+ * Organizations have a name, and a unique identifier we call the "slug". Both of these are updatable.
  */
 create table publ.organizations (
   id uuid primary key default gen_random_uuid(),

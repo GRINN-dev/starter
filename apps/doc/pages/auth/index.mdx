@@ -1,0 +1,57 @@
+# Les utilisateurs de l'application
+
+Le projet est une plateforme destinée à être utilisé par des utilisateurs connectés, que nous appelons `Users`. De manière générale, chaque utilisateur renseigne un certain nombre d'informations personnelles, qui permettent de l'identifier sur la plateforme, ainsi que les emails qu'il souhaite utiliser pour accéder à la plateforme.
+
+```mermaid
+erDiagram
+    %% Users Table
+    users {
+        id UUID
+        firstname TEXT
+        lastname TEXT
+        avatar_url TEXT
+        is_admin BOOLEAN
+        is_verified BOOLEAN
+        created_at TIMESTAMPTZ
+        updated_at TIMESTAMPTZ
+    }
+
+    %% User Emails Table
+    user_emails {
+        id UUID
+        user_id UUID
+        email CITEXT
+        is_verified BOOLEAN
+        is_primary BOOLEAN
+        created_at TIMESTAMPTZ
+        updated_at TIMESTAMPTZ
+    }
+
+    %% User Secrets Table
+    user_secrets {
+        user_id UUID
+        password_hash TEXT
+        last_login_at TIMESTAMPTZ
+        failed_password_attempts INT
+        first_failed_password_attempt TIMESTAMPTZ
+        reset_password_token TEXT
+        reset_password_token_generated TIMESTAMPTZ
+        failed_reset_password_attempts INT
+        first_failed_reset_password_attempt TIMESTAMPTZ
+        delete_account_token TEXT
+        delete_account_token_generated TIMESTAMPTZ
+    }
+
+    %% User Email Secrets Table
+    user_email_secrets {
+        user_email_id UUID
+        verification_token TEXT
+        verification_email_sent_at TIMESTAMPTZ
+        password_reset_email_sent_at TIMESTAMPTZ
+    }
+
+    %% Relationships
+    users ||--o{ user_emails : has
+    users ||--o{ user_secrets : has
+    user_emails ||--o{ user_email_secrets : has
+```

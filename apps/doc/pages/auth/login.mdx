@@ -1,0 +1,237 @@
+import { Callout, Steps } from "nextra/components";
+
+# Connexion
+
+Un utilisateur de la plateforme disposant d'un compte validé peut se connecter à l'application en renseignant son adresse mail et son mot de passe, afin d'accéder à l'ensemble des fonctionnalités de la plateforme.
+
+## Étapes lors de la connexion
+
+<Steps>
+
+### Remplissage formulaire :
+
+- email
+- mot de passe
+
+### Validation formulaire côté navigateur
+
+Le formulaire est validé côté navigateur. On indique au visiteur que les information squ'il a renseignées sont complètes.
+
+- vérification que les champs obligatoires sont renseignés,
+- vérification que l'email est valide,
+- vérification que le mot de passe est suffisamment sécurisé.
+
+### Appel API
+
+envoi du formulaire au serveur API via la mutation graphQL `login`
+
+### Vérification en BDD
+
+le resolver de cette mutation valide les informations de l'utilisateur et crée une session en base de données via l'emploi de procédures stockées dans la BDD PostgreSQL. (plus d'informations sur la mutation plus bas)
+
+### Réponse API
+
+- si la procédure stockée a bien été exécutée, le serveur API renvoie une réponse au client avec les champs suivant:
+  - User
+  - AccessToken
+  - RefreshToken.
+- si la procédure stockée n'a pas été exécutée, le serveur API renvoie une réponse au client avec un message d'erreur.
+- si la procédure stockée a été exécutée mais que l'utilisateur n'a pas été trouvé, le serveur API renvoie une réponse au client avec un message d'erreur.
+- si la procédure stockée a été exécutée mais que le mot de passe est incorrect, le serveur API renvoie une réponse au client avec un message d'erreur.
+- l'API répond avec un header **Set-Cookie** contenant le token d'accès et le token de rafraichissement.
+
+### Redirection
+
+Dans le cas d'une connexion depuis la web-app soongo, nous partageons le même domaine avec l'API, les headers **Set-Cookie** de la réponse peuvent donc correctement fonctionner et il n'y a pas besoin de stocker les identifiants de connexion. Un simple appel API nous assure donc d'être connecté.
+
+Dans la réponse de la connexion, nous récupérons les informations utilisateur, nous le redirigeaons en fonction:
+
+- si l'utilisateur est un administrateur, il est redirigé vers la page d'administration.
+- si l'utilisateur est un utilisateur, pas encore relié à une organisation, il est redirigé vers la landing page
+- si l'utilisateur est un utilisateur, relié à une organisation, il est redirigé vers la page d'accueil de l'organisation.
+- si l'utilisateur est relié à plusieurs organisations, il est redirigé vers une page où il peut choisir l'organisation à laquelle il souhaite accéder.
+
+</Steps>
+
+## Mutation GraphQL `login`
+
+```ts
+async login(_mutation, args, context: OurGraphQLContext, resolveInfo) {
+  const { selectGraphQLResultFromTable } = resolveInfo.graphile;
+  const { email, password } = args.input;
+  const { rootPgPool, pgClient, res } = context;
+  try {
+    // Call our login function to find out if the email/password combination exists
+    const {
+      rows: [session],
+    } = await rootPgPool.query(
+      `select sessions.* from priv.login($1, $2) sessions where not (sessions is null)`,
+      [email, password]
+    );
+    if (!session) {
+      throw Object.assign(new Error("Incorrect email/password"), {
+        code: "CREDS",
+      });
+    }
+    // Tell Passport.js we're logged in
+    // TODO: do the token thing
+    const { accessToken, refreshToken } = await loginUtils({
+      payload: {
+        sessionId: session.uuid,
+        userId: session.user_id,
+      },
+      pool: rootPgPool,
+      res,
+      at_secret: ACCESS_TOKEN_SECRET!,
+      rt_secret: REFRESH_TOKEN_SECRET!,
+    });
+    // Get session_id from PG
+    await pgClient.query(
+      `select set_config('jwt.claims.sid', $1, true), set_config('jwt.claims.sub', $2, true)`,
+      [session.uuid, session.user_id]
+    );
+    // Fetch the data that was requested from GraphQL, and return it
+    const sql = build.pgSql;
+    const [row] = await selectGraphQLResultFromTable(
+      sql.fragment`publ.users`,
+      (tableAlias, sqlBuilder) => {
+        sqlBuilder.where(
+          sql.fragment`${tableAlias}.id = publ.current_user_id()`
+        );
+      }
+    );
+    return {
+      data: row,
+      accessToken,
+      refreshToken,
+    };
+  } catch (e: any) {
+    const code = e.extensions?.code ?? e.code;
+    const safeErrorCodes = ["LOCKD", "CREDS"];
+    if (safeErrorCodes.includes(code)) {
+      throw e;
+    } else {
+      console.error(e);
+      throw Object.assign(new Error("Login failed"), {
+        code,
+      });
+    }
+  }
+},
+```
+
+```ts
+export async function loginUtil({
+  payload: { sessionId, userId },
+  res,
+  pool,
+  at_secret,
+  rt_secret,
+}: LoginInput) {
+  // create the tokens
+  const accessToken = signToken(
+    { sub: userId, session_id: sessionId },
+    { expiresIn: "30 days" },
+    at_secret
+  );
+  const refreshToken = signToken(
+    { sub: userId, session_id: sessionId },
+    { expiresIn: "7 days" },
+    rt_secret
+  );
+
+  // update the session in the db with the new refresh token
+  await pool.query(
+    `UPDATE priv.sessions SET refresh_token = $1 WHERE uuid = $2`,
+    [refreshToken, sessionId]
+  );
+  console.log("updated session with new refresh token :", process.env.DOMAIN);
+
+  // send the token via cookie
+  sendCookieToken(res, refreshToken, "qid", {
+    path: "/",
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+    domain: process.env.DOMAIN, // this is to limit our cookie to our domain, so the tokens are not sent to other domains like third party APIs,
+    secure: true, // this is to ensure that the cookie is only sent over https
+    httpOnly: true, // this is to ensure that the cookie is not accessible via javascript
+    sameSite: "none", // this is to ensure that the cookie is sent on cross-origin requests
+  });
+  sendCookieToken(res, accessToken, "access_token", {
+    path: "/",
+    expires: new Date(Date.now() + 1000 * 60 * 15),
+    domain: process.env.DOMAIN,
+    secure: true,
+    sameSite: "none",
+  });
+
+  return { accessToken, refreshToken };
+}
+```
+
+```sql
+create function priv.login(email citext, password text) returns priv.sessions as $$
+declare
+  v_user publ.users;
+  v_user_secret priv.user_secrets;
+  v_login_attempt_window_duration interval = interval '5 minutes';
+  v_session priv.sessions;
+begin
+
+  select users.* into v_user
+  from publ.users
+  inner join publ.user_emails
+  on (user_emails.user_id = users.id)
+  where user_emails.email = login.email
+  order by
+    user_emails.is_verified desc, -- Prefer verified email
+    user_emails.created_at asc -- Failing that, prefer the first registered (unverified users _should_ verify before logging in)
+  limit 1;
+
+
+  if not (v_user is null) then
+    -- Load their secrets
+    select * into v_user_secret from priv.user_secrets
+    where user_secrets.user_id = v_user.id;
+
+    -- Have there been too many login attempts?
+    if (
+      v_user_secret.first_failed_password_attempt is not null
+    and
+      v_user_secret.first_failed_password_attempt > NOW() - v_login_attempt_window_duration
+    and
+      v_user_secret.failed_password_attempts >= 3
+    ) then
+      raise exception 'User account locked - too many login attempts. Try again after 5 minutes.' using errcode = 'LOCKD';
+    end if;
+
+    -- Not too many login attempts, let's check the password.
+    -- NOTE: `password_hash` could be null, this is fine since `NULL = NULL` is null, and null is falsy.
+    if v_user_secret.password_hash = crypt(password, v_user_secret.password_hash) then
+      -- Excellent - they're logged in! Let's reset the attempt tracking
+      update priv.user_secrets
+      set failed_password_attempts = 0, first_failed_password_attempt = null, last_login_at = now()
+      where user_id = v_user.id;
+      -- Create a session for the user
+      insert into priv.sessions (user_id) values (v_user.id) returning * into v_session;
+      -- And finally return the session
+      return v_session;
+    else
+      -- Wrong password, bump all the attempt tracking figures
+      update priv.user_secrets
+      set
+        failed_password_attempts = (case when first_failed_password_attempt is null or first_failed_password_attempt < now() - v_login_attempt_window_duration then 1 else failed_password_attempts + 1 end),
+        first_failed_password_attempt = (case when first_failed_password_attempt is null or first_failed_password_attempt < now() - v_login_attempt_window_duration then now() else first_failed_password_attempt end)
+      where user_id = v_user.id;
+      return null; -- Must not throw otherwise transaction will be aborted and attempts won't be recorded
+    end if;
+  else
+    -- No user with that email was found
+    return null;
+  end if;
+end;
+$$ language plpgsql strict volatile;
+
+comment on function priv.login(email citext, password text) is
+  E'Returns a user that matches the email/password combo, or null on failure.';
+
+```

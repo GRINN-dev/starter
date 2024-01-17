@@ -39,7 +39,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     setIsLoading(true);
     const res = await sdk().Login({
-      username: data.email,
+      email: data.email,
       password: data.password,
     });
 

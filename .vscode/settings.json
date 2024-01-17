@@ -1,4 +1,5 @@
 {
   "i18n-ally.localesPaths": ["apps/site/messages"],
-  "i18n-ally.keystyle": "nested"
+  "i18n-ally.keystyle": "nested",
+  "clockify.tracking.projectId": "655e043210f2724a42474852"
 }

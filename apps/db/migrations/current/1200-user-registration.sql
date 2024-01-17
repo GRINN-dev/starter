@@ -4,21 +4,20 @@
  * `installPassportStrategy.ts`, calls link_or_register_user below, which may
  * then call really_create_user). Ultimately `really_create_user` is called in
  * all cases to create a user account within our system, so it must do
- * everything we'd expect in this case including validating username/password,
+ * everything we'd expect in this case including validating email/password,
  * setting the password (if any), storing the email address, etc.
  */
 
 create function priv.really_create_user(
-  username citext,
   email text,
   email_is_verified bool,
-  name text,
+  firstname text,
+  lastname text,
   avatar_url text,
   password text default null
 ) returns publ.users as $$
 declare
   v_user publ.users;
-  v_username citext = username;
 begin
   if password is not null then
     perform priv.assert_valid_password(password);
@@ -28,8 +27,8 @@ begin
   end if;
 
   -- Insert the new user
-  insert into publ.users (username, name, avatar_url) values
-    (v_username, name, avatar_url)
+  insert into publ.users (firstname, lastname, avatar_url) values
+    (firstname, lastname, avatar_url)
     returning * into v_user;
 
 	-- Add the user's email
@@ -50,7 +49,7 @@ begin
 end;
 $$ language plpgsql volatile set search_path to pg_catalog, public, pg_temp;
 
-comment on function priv.really_create_user(username citext, email text, email_is_verified bool, name text, avatar_url text, password text) is
+comment on function priv.really_create_user(email text, email_is_verified bool, firstname text, lastname text, avatar_url text, password text) is
   E'Creates a user account. All arguments are optional, it trusts the calling method to perform sanitisation.';
 
 /**********/
@@ -71,50 +70,23 @@ create function priv.register_user(
 declare
   v_user publ.users;
   v_email citext;
-  v_name text;
-  v_username citext;
+  v_firstname text;
+  v_lastname text;
   v_avatar_url text;
   v_user_authentication_id uuid;
 begin
   -- Extract data from the user’s OAuth profile data.
   v_email := f_profile ->> 'email';
-  v_name := f_profile ->> 'name';
-  v_username := f_profile ->> 'username';
+  v_firstname := f_profile ->> 'firstname';
+  v_lastname := f_profile ->> 'lastname';
   v_avatar_url := f_profile ->> 'avatar_url';
-
-  -- Sanitise the username, and make it unique if necessary.
-  if v_username is null then
-    v_username = coalesce(v_name, 'user');
-  end if;
-  v_username = regexp_replace(v_username, '^[^a-z]+', '', 'gi');
-  v_username = regexp_replace(v_username, '[^a-z0-9]+', '_', 'gi');
-  if v_username is null or length(v_username) < 3 then
-    v_username = 'user';
-  end if;
-  select (
-    case
-    when i = 0 then v_username
-    else v_username || i::text
-    end
-  ) into v_username from generate_series(0, 1000) i
-  where not exists(
-    select 1
-    from publ.users
-    where users.username = (
-      case
-      when i = 0 then v_username
-      else v_username || i::text
-      end
-    )
-  )
-  limit 1;
 
   -- Create the user account
   v_user = priv.really_create_user(
-    username => v_username,
     email => v_email,
     email_is_verified => f_email_is_verified,
-    name => v_name,
+    firstname => v_firstname,
+    lastname => v_lastname,
     avatar_url => v_avatar_url
   );
 

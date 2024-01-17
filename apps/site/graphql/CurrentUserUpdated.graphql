@@ -3,8 +3,8 @@ subscription CurrentUserUpdated {
     event
     user {
       id
-      username
-      name
+      firstname
+      lastname
       avatarUrl
       isAdmin
       isVerified

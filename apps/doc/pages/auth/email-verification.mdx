@@ -1,3 +1,12 @@
+```sql
+create trigger _900_send_verification_email
+  after insert on publ.user_emails
+  for each row
+  when (NEW.is_verified is false)
+  execute procedure priv.tg__add_job('user_emails__send_verification');
+```
+
+```ts
 import { Task } from "graphile-worker";
 
 import { SendEmailPayload } from "./send_email";
@@ -63,6 +72,7 @@ const task: Task = async (inPayload, { addJob, withPgClient }) => {
       )}&token=${encodeURIComponent(verification_token)}`,
       firstname,
       lastname,
+      name,
     },
   };
   await addJob("send_email", sendEmailPayload);
@@ -75,3 +85,44 @@ const task: Task = async (inPayload, { addJob, withPgClient }) => {
 };
 
 export default task;
+```
+
+```sql
+create function publ.verify_email(user_email_id uuid, token text) returns boolean as $$
+begin
+  update publ.user_emails
+  set
+    is_verified = true,
+    is_primary = is_primary or not exists(
+      select 1 from publ.user_emails other_email where other_email.user_id = user_emails.user_id and other_email.is_primary is true
+    )
+  where id = user_email_id
+  and exists(
+    select 1 from priv.user_email_secrets where user_email_secrets.user_email_id = user_emails.id and verification_token = token
+  );
+  return found;
+end;
+$$ language plpgsql strict volatile security definer set search_path to pg_catalog, public, pg_temp;
+comment on function publ.verify_email(user_email_id uuid, token text) is
+  E'Once you have received a verification token for your email, you may call this mutation with that token to make your email verified.';
+
+/*
+ * When the users first email address is verified we will mark their account as
+ * verified, which can unlock additional features that were gated behind an
+ * `isVerified` check.
+ */
+
+create function publ.tg_user_emails__verify_account_on_verified() returns trigger as $$
+begin
+  update publ.users set is_verified = true where id = new.user_id and is_verified is false;
+  return new;
+end;
+$$ language plpgsql strict volatile security definer set search_path to pg_catalog, public, pg_temp;
+
+create trigger _500_verify_account_on_verified
+  after insert or update of is_verified
+  on publ.user_emails
+  for each row
+  when (new.is_verified is true)
+  execute procedure publ.tg_user_emails__verify_account_on_verified();
+```

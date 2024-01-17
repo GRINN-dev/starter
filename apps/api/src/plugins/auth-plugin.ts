@@ -2,27 +2,25 @@ import { gql, makeExtendSchemaPlugin, Resolvers } from "postgraphile";
 
 import { OurGraphQLContext } from "../graphile.config";
 import { ERROR_MESSAGE_OVERRIDES } from "../utils/handleErrors";
-import { login } from "../utils/login";
+import { login as loginUtils } from "../utils/login";
 
 const { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } = process.env;
 const AuthPlugin = makeExtendSchemaPlugin((build) => {
   const typeDefs = gql`
     input RegisterInput {
-      username: String!
       email: String!
       password: String!
-      name: String
+      firstname: String
+      lastname: String
       avatarUrl: String
     }
 
     type RegisterPayload {
-      user: User! @pgField
-      accessToken: String
-      refreshToken: String
+      success: Boolean
     }
 
     input LoginInput {
-      username: String!
+      email: String!
       password: String!
     }
 
@@ -94,9 +92,8 @@ const AuthPlugin = makeExtendSchemaPlugin((build) => {
   const resolvers: Resolvers = {
     Mutation: {
       async register(_mutation, args, context: OurGraphQLContext, resolveInfo) {
-        const { selectGraphQLResultFromTable } = resolveInfo.graphile;
-        const { username, password, email, name, avatarUrl } = args.input;
-        const { rootPgPool, pgClient, res } = context;
+        const { password, email, firstname, lastname, avatarUrl } = args.input;
+        const { rootPgPool } = context;
         try {
           // Create a user and create a session for it in the proccess
           const {
@@ -105,21 +102,17 @@ const AuthPlugin = makeExtendSchemaPlugin((build) => {
             `
             with new_user as (
               select users.* from priv.really_create_user(
-                username => $1,
-                email => $2,
+                email => $1,
                 email_is_verified => false,
-                name => $3,
+                firstname => $2,
+                lastname => $3,
                 avatar_url => $4,
                 password => $5
               ) users where not (users is null)
-            ), new_session as (
-              insert into priv.sessions (user_id)
-              select id from new_user
-              returning *
             )
-            select new_user.id as user_id, new_session.uuid as session_id
-            from new_user, new_session`,
-            [username, email, name, avatarUrl, password]
+            select new_user.id as user_id
+            from new_user`,
+            [email, firstname, lastname, avatarUrl, password]
           );
 
           if (!details || !details.user_id) {
@@ -128,43 +121,8 @@ const AuthPlugin = makeExtendSchemaPlugin((build) => {
             });
           }
 
-          if (details.session_id)
-            // Store into transaction
-            await pgClient.query(
-              `select set_config('jwt.claims.session_id', $1, true)`,
-              [details.session_id]
-            );
-
-          const { accessToken, refreshToken } = await login({
-            payload: {
-              sessionId: details.session_id,
-              userId: details.user_id,
-            },
-            pool: rootPgPool,
-            res,
-            at_secret: ACCESS_TOKEN_SECRET!,
-            rt_secret: REFRESH_TOKEN_SECRET!,
-          });
-
-          rootPgPool.query(
-            `UPDATE priv.sessions SET refresh_token = $1 WHERE uuid = $2`,
-            [refreshToken, details.session_id]
-          );
-
-          // Fetch the data that was requested from GraphQL, and return it
-          const sql = build.pgSql;
-          const [row] = await selectGraphQLResultFromTable(
-            sql.fragment`publ.users`,
-            (tableAlias, sqlBuilder) => {
-              sqlBuilder.where(
-                sql.fragment`${tableAlias}.id = ${sql.value(details.user_id)}`
-              );
-            }
-          );
           return {
-            data: row,
-            accessToken,
-            refreshToken,
+            success: true,
           };
         } catch (e: any) {
           const { code } = e;
@@ -189,26 +147,26 @@ const AuthPlugin = makeExtendSchemaPlugin((build) => {
       },
       async login(_mutation, args, context: OurGraphQLContext, resolveInfo) {
         const { selectGraphQLResultFromTable } = resolveInfo.graphile;
-        const { username, password } = args.input;
+        const { email, password } = args.input;
         const { rootPgPool, pgClient, res } = context;
         try {
-          // Call our login function to find out if the username/password combination exists
+          // Call our login function to find out if the email/password combination exists
           const {
             rows: [session],
           } = await rootPgPool.query(
             `select sessions.* from priv.login($1, $2) sessions where not (sessions is null)`,
-            [username, password]
+            [email, password]
           );
 
           if (!session) {
-            throw Object.assign(new Error("Incorrect username/password"), {
+            throw Object.assign(new Error("Incorrect email/password"), {
               code: "CREDS",
             });
           }
 
           // Tell Passport.js we're logged in
           // TODO: do the token thing
-          const { accessToken, refreshToken } = await login({
+          const { accessToken, refreshToken } = await loginUtils({
             payload: {
               sessionId: session.uuid,
               userId: session.user_id,
@@ -256,6 +214,10 @@ const AuthPlugin = makeExtendSchemaPlugin((build) => {
 
       async logout(_mutation, _args, context: OurGraphQLContext, _resolveInfo) {
         const { pgClient } = context;
+        // clear cookies qid access_token
+
+        context.res.clearCookie("qid");
+        context.res.clearCookie("access_token");
         await pgClient.query("select publ.logout();");
         // await logout();
         // TODO: do the token and session thing

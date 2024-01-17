@@ -1,0 +1,9 @@
+{
+  "index": "Users",
+  "registration": "Création d'un compte",
+  "email-verification": "Vérification de l'e-mail",
+  "login": "Connexion",
+  "authentication": "Authentification",
+  "logout": "Déconnexion",
+  "password-reset": "Réinitialisation du mot de passe"
+}

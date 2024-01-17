@@ -1,7 +1,7 @@
 /*
  * This function accepts an invitation to join the organization and adds you to
- * the organization (deleting the invite).  If you were invited by username (or
- * your account could already be determined) you can accept an invitation
+ * the organization (deleting the invite).  If 
+ * your account could already be determined (user_id not null in invitation) you can accept an invitation
  * directly by the invitation_id; otherwise you will need the code as well to
  * prove you are the person that was invited (for example if you were invited
  * using a different email address to that which you created your account

@@ -172,7 +172,7 @@
         "description": "Given an invitation UUID (and, if required, the code that was emailed to you), retrieves the `Organization` that you were invited to."
       },
       "publ.invite_to_organization": {
-        "description": "You may invite a user to your organization either by their username (only for verified users) or by their email. If you opt to invite by email then an email will be sent to this person containing a code that they need to accept the invitation. If the person doesn't already have an account they will be instructed to create one; their account need not have the email address that you invited listed as the secret code is confirmation enough."
+        "description": "You may invite a user to your organization either by their email. If you opt to invite by email then an email will be sent to this person containing a code that they need to accept the invitation. If the person doesn't already have an account they will be instructed to create one; their account need not have the email address that you invited listed as the secret code is confirmation enough."
       },
       "publ.accept_invitation_to_organization": {
         "description": "If someone invited you by your email address then you must include the code that was emailed to you, otherwise you may accept the invitation directly using the UUID. If successful, you will be a member of the organization."

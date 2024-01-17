@@ -24,14 +24,11 @@ export async function UserNav() {
             <Avatar className="h-8 w-8">
               <AvatarImage
                 src={currentUser?.avatarUrl || "/images/avatar.png"}
-                alt={currentUser?.username}
+                alt={currentUser?.firstname + " " + currentUser?.lastname}
               />
               <AvatarFallback>
-                {currentUser?.username
-                  .split(" ")
-                  .map((name) => name[0])
-                  .join("")
-                  .toUpperCase()}
+                {currentUser?.firstname?.charAt(0).toUpperCase() +
+                  currentUser?.lastname?.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
           </Button>
@@ -42,9 +39,10 @@ export async function UserNav() {
               <p className="text-sm font-medium leading-none">
                 {currentUser?.name}
               </p>
-              <p className="text-xs leading-none text-muted-foreground">
+              {/* TODO: computed column `primary_email` on users */}
+              {/*   <p className="text-xs leading-none text-muted-foreground">
                 @{currentUser?.username}
-              </p>
+              </p> */}
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />

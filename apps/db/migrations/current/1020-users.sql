@@ -10,8 +10,8 @@
  */
 create table publ.users (
   id uuid primary key default gen_random_uuid(),
-  username citext not null unique check(length(username) >= 2 and length(username) <= 24 and username ~ '^[a-zA-Z]([_]?[a-zA-Z0-9])+$'),
-  name text,
+  firstname text,
+  lastname text,
   avatar_url text check(avatar_url ~ '^https?://[^/]+'),
   is_admin boolean not null default false,
   is_verified boolean not null default false,
@@ -31,7 +31,7 @@ create policy select_all on publ.users for select using (true);
 create policy update_self on publ.users for update using (id = publ.current_user_id());
 grant select on publ.users to :DATABASE_VISITOR;
 -- NOTE: `insert` is not granted, because we'll handle that separately
-grant update(username, name, avatar_url) on publ.users to :DATABASE_VISITOR;
+grant update(firstname, lastname, avatar_url) on publ.users to :DATABASE_VISITOR;
 -- NOTE: `delete` is not granted, because we require confirmation via request_account_deletion/confirm_account_deletion
 
 comment on table publ.users is
@@ -39,10 +39,10 @@ comment on table publ.users is
 
 comment on column publ.users.id is
   E'Unique identifier for the user.';
-comment on column publ.users.username is
-  E'Public-facing username (or ''handle'') of the user.';
-comment on column publ.users.name is
-  E'Public-facing name (or pseudonym) of the user.';
+comment on column publ.users.firstname is
+  E'Public-facing first name (or pseudonym) of the user.';
+comment on column publ.users.lastname is
+  E'Public-facing last name (or pseudonym) of the user.';
 comment on column publ.users.avatar_url is
   E'Optional avatar URL.';
 comment on column publ.users.is_admin is
@@ -106,7 +106,7 @@ comment on function priv.tg_user_secrets__insert_with_user() is
   E'Ensures that every user record has an associated user_secret record.';
 
 /*
- * Because you can register with username/password or using OAuth (social
+ * Because you can register with email/password or using OAuth (social
  * login), we need a way to tell the user whether or not they have a
  * password. This is to help the UI display the right interface: change
  * password or set password.

@@ -46,13 +46,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     setIsLoading(true);
     const res = await sdk().Register({
       email: data.email,
-
-      name: data?.firstname + " " + data.lastname,
-      // a random 10char alphanumeric string
-
-      username:
-        Math.random().toString(36).substring(2, 15) +
-        Math.random().toString(36).substring(2, 15),
+      firstname: data?.firstname,
+      lastname: data.lastname,
       password: data.password,
     });
 
