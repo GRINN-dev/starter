@@ -1,6 +1,5 @@
 import jwtPkg, { JwtPayload } from "jsonwebtoken";
 import { Express } from "express";
-import cookieParser from "cookie-parser";
 import { login } from "../utils/login";
 const { verify } = jwtPkg;
 

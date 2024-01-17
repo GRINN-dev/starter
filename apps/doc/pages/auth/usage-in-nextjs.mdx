@@ -1,0 +1,10 @@
+# Utilisation dans NextJS
+
+L'authentification dans NextJS represente un vrai défi. En effet, avec l'utilisation de React 18 et des server components, les requêtes à notre API peuvent être effectuées depuis un environnement _navigateur_ ou _serveur_. Selon le cas, les moyens dont nous disposons pour transmettre notre jeton de connexion et pour le raffraîchir diffèrent.
+
+## Authentification côté navigateur
+
+L'appel à la mutation `login` renvoie des headers de type Set-Cookie. Ces headers sont automatiquement traités par le navigateur et installent les cookies sur le client. Ces cookies sont ensuite automatiquement envoyés par le navigateur lors de chaque requête vers notre API. Ainsi, le jeton de connexion est automatiquement transmis à notre API et nous n'avons pas à nous en soucier.
+Il convient toutefois de vérifier que le jeton d'accès que nous envoyons est valide.
+
+TODO: à bien revoir, sur la stratégie middleware pour le refresh des tokens notammenet... ne pas rendre ce point bloquant pour le moment, on va mettre une grande validité au jeton d'accès

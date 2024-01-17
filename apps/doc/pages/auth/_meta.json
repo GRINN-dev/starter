@@ -5,6 +5,7 @@
   "login": "Connexion",
   "authentication": "Authentification",
   "refreshing-tokens": "Refresh des tokens",
+  "usage-in-nextjs": "Utilisation dans Next.js",
   "logout": "Déconnexion",
   "password-reset": "Réinitialisation du mot de passe"
 }
