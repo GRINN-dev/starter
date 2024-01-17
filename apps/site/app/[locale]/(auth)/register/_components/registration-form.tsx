@@ -46,8 +46,8 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
     setIsLoading(true);
     const res = await sdk().Register({
       email: data.email,
-      firstname: data?.firstname,
-      lastname: data.lastname,
+      firstName: data?.firstname,
+      lastName: data.lastname,
       password: data.password,
     });
 
