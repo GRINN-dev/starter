@@ -3,13 +3,13 @@ import { CookieOptions, Response } from "express";
 
 export interface Token {
   sub: string;
-  session_id?: string;
+  sid?: string;
   iss?: string;
   exp?: string;
   aud?: string;
 }
 export const signToken = (
-  payload: { sub: string; session_id?: string },
+  payload: { sub: string; sid?: string },
   pgJwtSignOptions: {
     audience?: string;
     issuer?: string;

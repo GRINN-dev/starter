@@ -18,12 +18,12 @@ export async function login({
 }: LoginInput) {
   // create the tokens
   const accessToken = signToken(
-    { sub: userId, session_id: sessionId },
+    { sub: userId },
     { expiresIn: "30 days" },
     at_secret
   );
   const refreshToken = signToken(
-    { sub: userId, session_id: sessionId },
+    { sub: userId, sid: sessionId },
     { expiresIn: "7 days" },
     rt_secret
   );

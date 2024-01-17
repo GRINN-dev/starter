@@ -4,6 +4,7 @@
   "email-verification": "Vérification de l'e-mail",
   "login": "Connexion",
   "authentication": "Authentification",
+  "refreshing-tokens": "Refresh des tokens",
   "logout": "Déconnexion",
   "password-reset": "Réinitialisation du mot de passe"
 }

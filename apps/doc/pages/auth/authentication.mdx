@@ -1,0 +1,92 @@
+# Gestion de l'authentification à notre API
+
+Lors de l'appel à la mutation `login`, une session est créée en base de données par la création d'une entrée dans la table `priv.sessions`. Cette table contient:
+
+- `uuid`: l'identifiant de la session
+- `user_id`: l'identifiant de l'utilisateur
+- `created_at`: la date de création de la session
+- `refresh_token`: le token de rafraichissement de la session
+- `refresh_count`: le nombre de fois que le token de rafraichissement a été utilisé
+- `last_refresh`: la date de la dernière utilisation du token de rafraichissement
+
+Une jeton est envoyé à l'utilisateur sous la forme d'un cookie `refresh_token` qui contient le token de rafraichissement. Ce cookie est envoyé avec l'option `httpOnly` pour empêcher le client d'y accéder. Le cookie est envoyé avec l'option `secure` pour empêcher le client d'envoyer le cookie sur une connexion non sécurisée.
+Un autre jeton est envoyé à l'utilisateur sous la forme d'un cookie `access_token` qui contient le token d'accès. Ce cookie est envoyé avec l'option `httpOnly` pour empêcher le client d'y accéder. Le cookie est envoyé avec l'option `secure` pour empêcher le client d'envoyer le cookie sur une connexion non sécurisée.
+
+Le jeton d'accès est valide pendant 15 minutes. Au bout de 15 minutes, le jeton d'accès est invalide et l'utilisateur doit se reconnecter. Le jeton de rafraichissement est valide pendant 7 jours. Au bout de 7 jours, le jeton de rafraichissement est invalide et l'utilisateur doit se reconnecter.
+
+Comme discuté dans la section suivante, le jeton de raffraichissement peut être échangé contre un nouveau jeton d'accès à l'aide d'un mecanisme de **refresh token rotation**
+
+## Contenu du jeton d'accès
+
+Le jeton d'accès contient les informations suivantes:
+
+- `sub`: l'identifiant de l'utilisateur
+- `iat`: la date de création du jeton
+- `exp`: la date d'expiration du jeton
+
+## contenu du jeton de rafraichissement
+
+Le jeton de rafraichissement contient les informations suivantes:
+
+- `sub`: l'identifiant de la session
+- `iat`: la date de création du jeton
+- `exp`: la date d'expiration du jeton
+- `sid`: l'identifiant de la session
+
+## Authentification des requêtes coté serveur
+
+Lors de chaque connexion au serveur, soit la requête inclut le jeton sous forme de cookie, soit elle inclut le jeton sous forme de header `Authorization` avec le format `Bearer <token>`. Un middleware dans le serveur vérifie la présence du jeton sous forme de cookie, et si il est présent alors le jeton est ajouté systématiquement sous la forme d'un header `Authorization` avec le format `Bearer <token>`.
+
+```ts
+// install-authorization-header.ts
+...
+const middleware = (req: Request, res: Response, next: NextFunction) => {
+  const accessToken = req.cookies.access_token;
+  if (accessToken) {
+    req.headers.authorization = `Bearer ${accessToken}`;
+  }
+  next();
+};
+...
+```
+
+Pour être ensuite utilisé dans Postgraphile, je jeton est ensuite vérifié et décodé. Si il est valide, ses informations sont transmise à la transaction en BDD pour nous permettre d'authentifier l'utilisateur côté BDD:
+
+```ts
+// graphile.config.ts
+//...
+async pgSettings(req) {
+      const access_token = req.headers?.authorization?.split(" ")[1];
+      let tokenPayload: JwtPayload | null = null;
+      if (access_token) {
+        try {
+          tokenPayload = verify(
+            access_token,
+            process.env.ACCESS_TOKEN_SECRET!
+          ) as JwtPayload;
+        } catch (e) {
+          console.warn("Invalid access token", e);
+        }
+      }
+      const userId = uuidOrNull(
+        tokenPayload?.sub
+      );
+      return {
+        role: process.env.DATABASE_VISITOR,
+        "jwt.claims.sub": userId,
+      };
+    },
+//...
+```
+
+côté BDD, une fonction `current_user_id` est créée pour nous permettre de récupérer l'identifiant de l'utilisateur courant:
+
+```sql
+create function publ.current_user_id() returns uuid as $$
+  select nullif(pg_catalog.current_setting('jwt.claims.sub', true), '')::uuid;
+$$ language sql stable;
+comment on function publ.current_user_id() is
+  E'Handy method to get the current user ID for use in RLS policies, etc; in GraphQL, use `currentUser{id}` instead.';
+```
+
+Cette fonction peut ensuite être utilisé dans d'autres procédures BDD ou dans les RLS.
